@@ -30,12 +30,17 @@ OptionParser.new do |opts|
     options[:new] = true
   end
 
+  opts.on("-p", "--profile=NAME", "Use specified profile name") do |v|
+    options[:profile_name] = v
+  end
+
   opts.on("-u", "--user USER", "Launch as given user") do |v|
     options[:user] = v
   end
 end.parse!
 
-profile, *args = ARGV
+profile = options[:profile_name] || 'default'
+args = ARGV
 
 if profile.nil?
   raise "Usage: launch-chromium [-u user] profile"
