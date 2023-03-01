@@ -44,6 +44,8 @@ end
 binary = options[:binary_path] || 'firefox'
 profile = options[:profile_name] || 'default'
 
+DATA_PATH = File.join(File.dirname(__FILE__), '../data/fox')
+
 require 'etc'
 
 def run(cmd)
@@ -158,7 +160,10 @@ unless File.exist?(File.join(profile_path, 'system'))
   FileUtils.ln_sf(File.join(src, 'system'), File.join(profile_path, 'system'))
 end
 
-search = JSON.load(File.read(File.join(src, 'search.json.in')))
+search_path = File.join(DATA_PATH, 'search.json.in')
+search = File.open(search_path) do |f|
+  JSON.load(f)
+end
 hash = FirefoxHashGenerator.generate(:waterfox, profile_basename, 'DuckDuckGo')
 search['metaData'] = {
   current: 'DuckDuckGo',
