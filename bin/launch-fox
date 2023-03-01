@@ -12,28 +12,37 @@ require 'optparse'
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: launch-fox [-c cert] [-e ext.xpi] [-u user] binary profile"
+  opts.banner = "Usage: launch-fox [options]"
 
-  opts.on("-c", "--ca=PATH", "Add a CA certificate to trust store") do |value|
+  opts.on("-b", "--binary=PATH", "Launch the binary at PATH (default: firefox)") do |v|
+    options[:binary] = v
+  end
+
+  opts.on("-c", "--ca=PATH", "Add a CA certificate to trust store (can be given more than once)") do |value|
     options[:ca_certs] ||= []
     options[:ca_certs] << value
   end
 
-  opts.on("-e", "--ext PATH", "Load unpacked extension at PATH") do |v|
+  opts.on("-e", "--ext=PATH", "Load unpacked extension at PATH (can be given more than once)") do |v|
     options[:extensions] ||= []
     options[:extensions] << v
   end
 
-  opts.on("-u", "--user USER", "Launch as given user") do |v|
+  opts.on("-p", "--profile=NAME", "Use specified profile name") do |v|
+    options[:profile_name] = v
+  end
+
+  opts.on("-u", "--user=USER", "Launch as given user") do |v|
     options[:user] = v
   end
 end.parse!
 
-binary, profile = ARGV
-
-if profile.nil?
-  raise "Usage: launch-fox [-u user] binary profile"
+if ARGV.any?
+  raise "launch-fox does not accept positional arguments"
 end
+
+binary = options[:binary_path] || 'firefox'
+profile = options[:profile_name] || 'default'
 
 require 'etc'
 
