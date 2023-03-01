@@ -188,7 +188,7 @@ if search_engine_name = options[:default_search_name]
 
   hash = FirefoxHashGenerator.generate(:waterfox, profile_basename, search_engine_name)
   search['metaData'] = {
-    current: 'DuckDuckGo',
+    current: search_engine_name,
     hash: hash,
   }
   search = JSON.dump(search)
