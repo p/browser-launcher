@@ -23,6 +23,10 @@ OptionParser.new do |opts|
     options[:ca_certs] << value
   end
 
+  opts.on("-S", "--default-search=NAME", "Specify default search engine name") do |v|
+    options[:default_search_name] = v
+  end
+
   opts.on("-e", "--ext=PATH", "Load unpacked extension at PATH (can be given more than once)") do |v|
     options[:extensions] ||= []
     options[:extensions] << v
@@ -99,6 +103,9 @@ if Etc.getpwuid(Process.euid).name != target_user
     options[:extensions]&.each do |ext|
       cmd += ['-e', ext]
     end
+    if ds = options[:default_search_name]
+      cmd += ['-S', ds]
+    end
     cmd += ARGV
     puts "Executing #{cmd.join(' ')}"
     exec(*cmd)
@@ -160,25 +167,41 @@ unless File.exist?(File.join(profile_path, 'system'))
   FileUtils.ln_sf(File.join(src, 'system'), File.join(profile_path, 'system'))
 end
 
-search_path = File.join(DATA_PATH, 'search.json.in')
-search = File.open(search_path) do |f|
-  JSON.load(f)
-end
-hash = FirefoxHashGenerator.generate(:waterfox, profile_basename, 'DuckDuckGo')
-search['metaData'] = {
-  current: 'DuckDuckGo',
-  hash: hash,
-}
-search = JSON.dump(search)
-# https://github.com/dearblue/ruby-extlz4
-# https://gist.github.com/Tblue/62ff47bef7f894e92ed5
-# https://gist.github.com/kaefer3000/73febe1eec898cd50ce4de1af79a332a
-# use lz4jsoncat in lz4json debian package to verify
-require 'extlz4'
-File.open(File.join(profile_path, 'search.json.mozlz4'), 'wb') do |f|
-  f << "mozLz40\0"
-  f << [search.length].pack('l<')
-  f << LZ4.block_encode(search)
+if search_engine_name = options[:default_search_name]
+  search_path = File.join(DATA_PATH, 'search.json.in')
+  search = File.open(search_path) do |f|
+    JSON.load(f)
+  end
+
+  known_names = search.fetch('engines').map { |e| e.fetch('_name') }
+  unless known_names.include?(search_engine_name)
+    sn = known_names.detect do |n|
+      n.downcase == search_engine_name
+    end
+    if sn
+      puts "Correcting search engine name: #{search_engine_name} -> #{sn}"
+      search_engine_name = sn
+    else
+      raise "Unknown search engine: #{search_engine_name}"
+    end
+  end
+
+  hash = FirefoxHashGenerator.generate(:waterfox, profile_basename, search_engine_name)
+  search['metaData'] = {
+    current: 'DuckDuckGo',
+    hash: hash,
+  }
+  search = JSON.dump(search)
+  # https://github.com/dearblue/ruby-extlz4
+  # https://gist.github.com/Tblue/62ff47bef7f894e92ed5
+  # https://gist.github.com/kaefer3000/73febe1eec898cd50ce4de1af79a332a
+  # use lz4jsoncat in lz4json debian package to verify
+  require 'extlz4'
+  File.open(File.join(profile_path, 'search.json.mozlz4'), 'wb') do |f|
+    f << "mozLz40\0"
+    f << [search.length].pack('l<')
+    f << LZ4.block_encode(search)
+  end
 end
 
 if certs = options[:ca_certs]
