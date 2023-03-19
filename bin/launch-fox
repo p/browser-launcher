@@ -51,6 +51,10 @@ OptionParser.new do |opts|
   opts.on("--user-content-css=PATH", "Path to userContent.css") do |v|
     options[:user_content_css_path] = v
   end
+
+  opts.on("--policies=PATH", "Path to policies.json") do |v|
+    options[:policies_path] = v
+  end
 end.parse!
 
 if ARGV.any?
@@ -133,6 +137,9 @@ if Etc.getpwuid(Process.euid).name != target_user
     if path = options[:binary_path]
       cmd += ['-b', path]
     end
+    if path = options[:policies_path]
+      cmd += ['--policies', path]
+    end
     cmd += ARGV
     puts "Executing #{cmd.join(' ')}"
     exec(*cmd)
@@ -183,8 +190,6 @@ ini.write(filename: catalog_path)
 
 FileUtils.mkdir_p(profile_path)
 
-src = File.expand_path(File.join(File.dirname(__FILE__), '../home/mozilla'))
-
 chrome_path = File.join(profile_path, 'chrome')
 FileUtils.mkdir_p(chrome_path)
 if path = options[:user_js_path]
@@ -196,11 +201,10 @@ end
 if path = options[:user_content_css_path]
   FileUtils.cp(path, File.join(chrome_path, 'userContent.css'))
 end
-=begin Old distribution subdir under profile dir
-unless File.exist?(File.join(profile_path, 'system'))
-  FileUtils.ln_sf(File.join(src, 'system'), File.join(profile_path, 'system'))
+if path = options[:policies_path]
+  FileUtils.mkdir_p(File.join(profile_path, 'system/distribution'))
+  FileUtils.cp(path, File.join(profile_path, 'system/distribution/policies.json'))
 end
-=end
 
 if search_engine_name = options[:default_search_name]
   search_path = File.join(DATA_PATH, 'search.json.in')
