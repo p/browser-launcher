@@ -15,7 +15,7 @@ OptionParser.new do |opts|
   opts.banner = "Usage: launch-fox [options]"
 
   opts.on("-b", "--binary=PATH", "Launch the binary at PATH (default: firefox)") do |v|
-    options[:binary] = v
+    options[:binary_path] = v
   end
 
   opts.on("-c", "--ca=PATH", "Add a CA certificate to trust store (can be given more than once)") do |value|
@@ -130,7 +130,7 @@ if Etc.getpwuid(Process.euid).name != target_user
     if name = options[:profile_name]
       cmd += ['-p', name]
     end
-    if path = options[:binary]
+    if path = options[:binary_path]
       cmd += ['-b', path]
     end
     cmd += ARGV
