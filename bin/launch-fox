@@ -238,8 +238,12 @@ if certs = options[:ca_certs]
   end
 end
 
-require 'browser_launcher/fox/extension_metadata'
-require 'browser_launcher/fox/packed_extension'
+begin
+  require 'browser_launcher/fox'
+rescue LoadError
+  $: << File.join(File.dirname(__FILE__), '../lib')
+  require 'browser_launcher/fox'
+end
 
 if exts = options[:extensions]
   addons = []
