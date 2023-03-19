@@ -118,6 +118,21 @@ if Etc.getpwuid(Process.euid).name != target_user
     if ds = options[:default_search_name]
       cmd += ['-S', ds]
     end
+    if path = options[:user_js_path]
+      cmd += ['--user-js', path]
+    end
+    if path = options[:user_chrome_css_path]
+      cmd += ['--user-chrome-css', path]
+    end
+    if path = options[:user_content_css_path]
+      cmd += ['--user-content-css', path]
+    end
+    if name = options[:profile_name]
+      cmd += ['-p', name]
+    end
+    if path = options[:binary]
+      cmd += ['-b', path]
+    end
     cmd += ARGV
     puts "Executing #{cmd.join(' ')}"
     exec(*cmd)
