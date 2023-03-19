@@ -39,6 +39,18 @@ OptionParser.new do |opts|
   opts.on("-u", "--user=USER", "Launch as given user") do |v|
     options[:user] = v
   end
+
+  opts.on("--user-js=PATH", "Path to user.js") do |v|
+    options[:user_js_path] = v
+  end
+
+  opts.on("--user-chrome-css=PATH", "Path to userChrome.css") do |v|
+    options[:user_chrome_css_path] = v
+  end
+
+  opts.on("--user-content-css=PATH", "Path to userContent.css") do |v|
+    options[:user_content_css_path] = v
+  end
 end.parse!
 
 if ARGV.any?
@@ -160,12 +172,20 @@ src = File.expand_path(File.join(File.dirname(__FILE__), '../home/mozilla'))
 
 chrome_path = File.join(profile_path, 'chrome')
 FileUtils.mkdir_p(chrome_path)
-FileUtils.ln_sf(File.join(src, 'userChrome.css'), File.join(chrome_path, 'userChrome.css'))
-FileUtils.ln_sf(File.join(src, 'userContent.css'), File.join(chrome_path, 'userContent.css'))
-FileUtils.ln_sf(File.join(src, 'user.js'), File.join(profile_path, 'user.js'))
+if path = options[:user_js_path]
+  FileUtils.cp(path, File.join(chrome_path, 'user.js'))
+end
+if path = options[:user_chrome_css_path]
+  FileUtils.cp(path, File.join(chrome_path, 'userChrome.css'))
+end
+if path = options[:user_content_css_path]
+  FileUtils.cp(path, File.join(chrome_path, 'userContent.css'))
+end
+=begin Old distribution subdir under profile dir
 unless File.exist?(File.join(profile_path, 'system'))
   FileUtils.ln_sf(File.join(src, 'system'), File.join(profile_path, 'system'))
 end
+=end
 
 if search_engine_name = options[:default_search_name]
   search_path = File.join(DATA_PATH, 'search.json.in')
