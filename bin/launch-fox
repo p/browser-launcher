@@ -304,4 +304,7 @@ end
 
 # Waterfox and waterfox classic put profiles in the same place, ugh.
 #exec(binary, '-P', profile)
-exec(binary, '--profile', '-no-remote', profile_path)
+cmd = [binary, '--no-remote', '--profile', profile_path, '--ProfileManager']
+joined = cmd.join(' ')
+puts "Executing #{joined}"
+exec(*cmd)
