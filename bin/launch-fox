@@ -10,17 +10,29 @@
 
 require 'optparse'
 
+def verify_path_exists(path, desc)
+  unless File.exist?(path)
+    raise "Specified #{desc} does not exist: #{path}"
+  end
+  path
+end
+
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: launch-fox [options]"
 
   opts.on("-b", "--binary=PATH", "Launch the binary at PATH (default: firefox)") do |v|
+    if v.include?('/')
+      verify_path_exists(v, 'Firefox binary')
+    else
+      # TODO locate the binary in PATH, warn/error if missing
+    end
     options[:binary_path] = v
   end
 
   opts.on("-c", "--ca=PATH", "Add a CA certificate to trust store (can be given more than once)") do |value|
     options[:ca_certs] ||= []
-    options[:ca_certs] << value
+    options[:ca_certs] << verify_path_exists(value, 'CA certificate')
   end
 
   opts.on("-S", "--default-search=NAME", "Specify default search engine name") do |v|
@@ -29,7 +41,7 @@ OptionParser.new do |opts|
 
   opts.on("-e", "--ext=PATH", "Load unpacked extension at PATH (can be given more than once)") do |v|
     options[:extensions] ||= []
-    options[:extensions] << v
+    options[:extensions] << verify_path_exists(v, 'unpacked extension')
   end
 
   opts.on("-p", "--profile=NAME", "Use specified profile name") do |v|
@@ -41,19 +53,19 @@ OptionParser.new do |opts|
   end
 
   opts.on("--user-js=PATH", "Path to user.js") do |v|
-    options[:user_js_path] = v
+    options[:user_js_path] = verify_path_exists(v, 'user.js')
   end
 
   opts.on("--user-chrome-css=PATH", "Path to userChrome.css") do |v|
-    options[:user_chrome_css_path] = v
+    options[:user_chrome_css_path] = verify_path_exists(v, 'userChrome.css')
   end
 
   opts.on("--user-content-css=PATH", "Path to userContent.css") do |v|
-    options[:user_content_css_path] = v
+    options[:user_content_css_path] = verify_path_exists(v, 'userContent.css')
   end
 
   opts.on("--policies=PATH", "Path to policies.json") do |v|
-    options[:policies_path] = v
+    options[:policies_path] = verify_path_exists(v, 'policies.json')
   end
 end.parse!
 
