@@ -190,7 +190,6 @@ require 'inifile'
 require 'fileutils'
 require 'tmpdir'
 require 'json'
-require 'firefox_hash_generator'
 
 if File.exist?(catalog_path)
   ini = IniFile.new(filename: catalog_path, separator: '')
@@ -244,7 +243,7 @@ if search_engine_name = options[:default_search_name]
     end
   end
 
-  hash = FirefoxHashGenerator.generate(:waterfox, profile_basename, search_engine_name)
+  hash = BrowserLauncher::Fox::HashGenerator.generate(:waterfox, profile_basename, search_engine_name)
   search['metaData'] = {
     current: search_engine_name,
     hash: hash,
