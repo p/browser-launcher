@@ -314,10 +314,10 @@ if exts = options[:extensions]
   md.dump!
 end
 
-src_path = File.join(profile_dir, 'chrome/user.js')
+src_path = File.join(profile_path, 'chrome/user.js')
 if File.exist?(src_path)
   contents = File.read(src_path)
-  File.open(File.join(profile_dir, 'prefs.js'), 'a') do |f|
+  File.open(File.join(profile_path, 'prefs.js'), 'a') do |f|
     f << "\n"
     f << contents
   end
