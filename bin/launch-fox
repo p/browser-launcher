@@ -158,7 +158,7 @@ if Etc.getpwuid(Process.euid).name != target_user
   end
 end
 
-profile_dir = case File.basename(binary)
+profiles_dir = case File.basename(binary)
 when 'waterfox'
   if binary =~ /waterfox-classic/
     '.waterfox-classic'
@@ -173,7 +173,7 @@ else
   raise "Unknown browser #{binary}"
 end
 
-catalog_dir = File.join(File.expand_path('~'), profile_dir)
+catalog_dir = File.join(File.expand_path('~'), profiles_dir)
 
 catalog_path = File.join(catalog_dir, 'profiles.ini')
 profile_basename = "gen.#{profile}"
