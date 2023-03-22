@@ -44,6 +44,10 @@ OptionParser.new do |opts|
     options[:extensions] << verify_path_exists(v, 'unpacked extension')
   end
 
+  opts.on('-g', '--group-access', 'Make profile directory group-accessible (read & write)') do
+    options[:group_accessible] = true
+  end
+
   opts.on("-p", "--profile=NAME", "Use specified profile name") do |v|
     options[:profile_name] = v
   end
@@ -151,6 +155,9 @@ if Etc.getpwuid(Process.euid).name != target_user
     end
     if path = options[:policies_path]
       cmd += ['--policies', path]
+    end
+    if options[:group_accessible]
+      cmd << '-g'
     end
     cmd += ARGV
     puts "Executing #{cmd.join(' ')}"
@@ -325,7 +332,34 @@ end
 
 # Waterfox and waterfox classic put profiles in the same place, ugh.
 #exec(binary, '-P', profile)
-cmd = [binary, '--no-remote', '--profile', profile_path, '--ProfileManager']
+cmd = [binary, '--no-remote', '--profile', profile_path]
 joined = cmd.join(' ')
 puts "Executing #{joined}"
-exec(*cmd)
+if pid = fork
+  if options[:group_accessible]
+    Thread.new do
+      sleep 2
+      begin
+        FileUtils.chmod_R('g+rwX', profile_path)
+      rescue SystemCallError => exc
+        warn "Error chmodding profile dir: #{exc.class}: #{exc}"
+      end
+      loop do
+        puts 'chmod'
+        begin
+          FileUtils.chmod_R('g+rwX', profile_path)
+        rescue SystemCallError => exc
+          warn "Error chmodding profile dir: #{exc.class}: #{exc}"
+        end
+        sleep 5
+      end
+    end
+  end
+
+  Process.wait(pid)
+  if $?.exitstatus != 0
+    raise "Failed to run #{joined}: process exited with code #{$?.exitstatus}"
+  end
+else
+  exec(*cmd)
+end
