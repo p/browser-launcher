@@ -253,7 +253,7 @@ module BrowserLauncher
             end
           end
 
-          hash = BrowserLauncher::Fox::HashGenerator.generate(:waterfox, profile_basename, search_engine_name)
+          hash = HashGenerator.generate(:waterfox, profile_basename, search_engine_name)
           search['metaData'] = {
             current: search_engine_name,
             hash: hash,
