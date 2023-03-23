@@ -6,24 +6,11 @@ require 'inifile'
 require 'optparse'
 require 'etc'
 require 'browser_launcher/utils'
+require 'browser_launcher/launcher_base'
 
 module BrowserLauncher
   module Fox
-    class Launcher
-      def initialize
-        @options = {}
-
-        if block_given?
-          yield self
-        end
-      end
-
-      def run
-        report_exceptions do
-          process_args
-          launch
-        end
-      end
+    class Launcher < LauncherBase
 
       private
 
@@ -366,19 +353,6 @@ module BrowserLauncher
           end
         else
           exec(*cmd)
-        end
-      end
-
-      def report_exceptions
-        yield
-      rescue => exc
-        if gui?
-          Utils.run(['yad', '--title', 'Error launching browser',
-            '--text', "#{exc.class}: #{exc}",
-            '--button', 'OK'])
-          exit 1
-        else
-          raise
         end
       end
     end
