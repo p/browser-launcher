@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'zip'
 require 'active_support'
 require 'active_support/core_ext/hash/conversions'
