@@ -101,14 +101,13 @@ module BrowserLauncher
           Thread.new do
             sleep 2
             begin
-              FileUtils.chmod_R('g+rwX', profile_path)
+              FileUtils.chmod_R('g+rwX', profile_path, force: true)
             rescue SystemCallError => exc
               warn "Error chmodding profile dir: #{exc.class}: #{exc}"
             end
             loop do
-              puts 'chmod'
               begin
-                FileUtils.chmod_R('g+rwX', profile_path)
+                FileUtils.chmod_R('g+rwX', profile_path, force: true)
               rescue SystemCallError => exc
                 warn "Error chmodding profile dir: #{exc.class}: #{exc}"
               end
