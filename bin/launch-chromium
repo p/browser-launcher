@@ -1,8 +1,5 @@
 #!/usr/bin/env ruby
 
-# https://peter.sh/experiments/chromium-command-line-switches/
-# https://superuser.com/questions/1343290/disable-chrome-session-restore-popup
-
 require 'optparse'
 
 options = {}

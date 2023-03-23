@@ -1,5 +1,10 @@
 ## Chromium / Chrome
 
+### Launching
+
+https://peter.sh/experiments/chromium-command-line-switches/
+https://superuser.com/questions/1343290/disable-chrome-session-restore-popup
+
 ### Policies
 
 https://dennisspan.com/deploying-google-chrome-extensions-using-group-policy/
@@ -7,15 +12,16 @@ https://www.chromium.org/administrators/linux-quick-start
 http://dev.chromium.org/administrators/policy-list-3#ExtensionInstallForcelist
 https://cloud.google.com/docs/chrome-enterprise/policies/
 
-### Install Chrome Extensions
+### Install Extensions
 
 https://github.com/mdamien/chrome-extensions-archive/issues/8
 https://stackoverflow.com/questions/16800696/how-install-crx-chrome-extension-via-command-line
 https://developer.chrome.com/webstore/inline_installation
 
-### Chrome Preferences
+### Preferences
 
 https://support.google.com/chrome/a/answer/187948?visit_id=637393417480115480-3521742&rd=1
+
 
 ## Firefox / Waterfox / Pale Moon
 
@@ -25,8 +31,10 @@ https://www.waterfox.net/support/WINNT/profiles-where-waterfox-stores-user-data/
 
 ### Extension Installation
 
-http://kb.mozillazine.org/Installing_extensions
-http://kb.mozillazine.org/Determine_extension_ID
+- http://kb.mozillazine.org/Installing_extensions
+- http://kb.mozillazine.org/Determine_extension_ID
+- https://www.ghacks.net/2016/08/14/override-firefox-add-on-signing-requirement/
+- https://firefox-source-docs.mozilla.org/mozbase/mozprofile.html
 
 ### Policies
 
@@ -56,3 +64,11 @@ https://www-archive.mozilla.org/unix/customizing.html
 Decentraleyes - common js rerouter extension
 
 Facebook containers/multi-container extension - interesting
+
+
+## X11
+
+### Message Boxes
+
+- yad
+- zenity
