@@ -82,7 +82,7 @@ module BrowserLauncher
         # https://stackoverflow.com/questions/11505767/how-can-i-set-chrome-to-use-system-titlebars-and-border-in-preferences-file
         content['browser']['custom_chrome_frame'] = false
 
-    =begin
+=begin
         unless content['profile']
           content['profile'] = {
             'info_cache' => {
@@ -93,7 +93,7 @@ module BrowserLauncher
           }
           content['last_active_profiles'] = %w(Default)
         end
-    =end
+=end
 
         File.open(path, 'w') do |f|
           f << JSON.dump(content)

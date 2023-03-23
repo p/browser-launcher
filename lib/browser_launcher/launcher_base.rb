@@ -21,7 +21,7 @@ module BrowserLauncher
 
     def target_user
       @target_user ||= begin
-        target_user = options[:user] || profile
+        target_user = options[:user] || `whoami`.strip
         unless target_user.start_with?('br-')
           target_user = "br-#{target_user}"
         end
@@ -52,6 +52,10 @@ module BrowserLauncher
       end
     end
 
+    def target_xauthority_path
+      "/home/#{target_user}/.Xauthority"
+    end
+
     def maybe_relaunch_as_target_user
       if Etc.getpwuid(Process.euid).name != target_user
         begin
@@ -80,7 +84,7 @@ module BrowserLauncher
           end
           cmd = [
             'sudo', '-nu', target_user,
-            'env', "XAUTHORITY=/home/#{target_user}/.Xauthority",
+            'env', "XAUTHORITY=#{target_xauthority_path}",
             File.realpath(File.expand_path($0))
           ] + build_cmd
           puts "Executing #{cmd.join(' ')}"
