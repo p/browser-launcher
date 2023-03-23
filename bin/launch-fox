@@ -17,4 +17,10 @@ rescue LoadError
   require 'browser_launcher/fox'
 end
 
-BrowserLauncher::Fox::Launcher.new.run
+BrowserLauncher::Fox::Launcher.new do |launcher|
+  launcher.report_exceptions do
+    launcher.process_args
+    launcher.run
+  end
+end
+

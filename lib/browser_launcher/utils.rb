@@ -21,5 +21,18 @@ module BrowserLauncher
       path
     end
 
+    module_function def report_errors
+      yield
+    rescue => exc
+      if gui?
+        Utils.run(['yad', '--title', 'Error launching browser',
+          '--text', "#{exc.class}: #{exc}",
+          '--button', 'OK'])
+        exit 1
+      else
+        raise
+      end
+    end
+
   end
 end

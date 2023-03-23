@@ -11,7 +11,14 @@ module BrowserLauncher
   module Fox
     class Launcher
       def initialize
-        options = {}
+        @options = {}
+
+        if block_given?
+          yield self
+        end
+      end
+
+      def process_args
         OptionParser.new do |opts|
           opts.banner = "Usage: launch-fox [options]"
 
@@ -74,8 +81,6 @@ module BrowserLauncher
         if ARGV.any?
           raise "launch-fox does not accept positional arguments"
         end
-
-        @options = options
       end
 
       attr_reader :options
@@ -90,6 +95,10 @@ module BrowserLauncher
 
       def binary_path
         options[:binary_path] || 'firefox'
+      end
+
+      def gui?
+        !!options[:gui]
       end
 
       def run
@@ -128,6 +137,9 @@ module BrowserLauncher
               end
             end
             cmd = %w(sudo -nu) + [target_user, 'env', "XAUTHORITY=/home/#{target_user}/.Xauthority", File.realpath(File.expand_path($0))]
+            if options[:gui]
+              cmd << '-G'
+            end
             options[:extensions]&.each do |ext|
               cmd += ['-e', ext]
             end
@@ -345,6 +357,19 @@ module BrowserLauncher
           end
         else
           exec(*cmd)
+        end
+      end
+
+      def report_exceptions
+        yield
+      rescue => exc
+        if gui?
+          Utils.run(['yad', '--title', 'Error launching browser',
+            '--text', "#{exc.class}: #{exc}",
+            '--button', 'OK'])
+          exit 1
+        else
+          raise
         end
       end
     end
