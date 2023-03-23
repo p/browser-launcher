@@ -18,6 +18,13 @@ module BrowserLauncher
         end
       end
 
+      def run
+        report_exceptions do
+          process_args
+          launch
+        end
+      end
+
       def process_args
         OptionParser.new do |opts|
           opts.banner = "Usage: launch-fox [options]"
@@ -101,7 +108,7 @@ module BrowserLauncher
         !!options[:gui]
       end
 
-      def run
+      def launch
         target_user = options[:user] || profile
         unless target_user.start_with?('br-')
           target_user = "br-#{target_user}"
