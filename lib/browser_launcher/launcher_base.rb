@@ -117,6 +117,21 @@ module BrowserLauncher
           end
         end
 
+        if options[:group_accessible]
+          loop do
+            begin
+              Process.kill(0, pid)
+            rescue SystemCallError
+              break
+            end
+            sleep 0.5
+          end
+        end
+
+        # This blocks the process including all background threads.
+        # Do this even if we looped above waiting for kill to fail
+        # in case the kill failed due to an error, not due to the target
+        # process exiting.
         Process.wait(pid)
         if $?.exitstatus != 0
           raise "Failed to run #{joined}: process exited with code #{$?.exitstatus}"

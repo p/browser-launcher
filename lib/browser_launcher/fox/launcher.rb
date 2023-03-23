@@ -130,10 +130,8 @@ module BrowserLauncher
         cmd += ARGV
       end
 
-      def launch
-        maybe_relaunch_as_target_user
-
-        profiles_dir = case File.basename(binary_path)
+      def rel_profiles_dir
+        @profiles_dir ||= case File.basename(binary_path)
         when 'waterfox'
           if binary_path =~ /waterfox-classic/
             '.waterfox-classic'
@@ -147,12 +145,24 @@ module BrowserLauncher
         else
           raise "Unknown browser #{binary_path}"
         end
+      end
 
-        catalog_dir = File.join(File.expand_path('~'), profiles_dir)
+      def profiles_dir
+        @profiles_dir ||= File.join(File.expand_path('~'), rel_profiles_dir)
+      end
 
-        catalog_path = File.join(catalog_dir, 'profiles.ini')
-        profile_basename = "gen.#{profile}"
-        profile_path = File.join(catalog_dir, profile_basename)
+      def profile_basename
+        "gen.#{profile}"
+      end
+
+      def profile_path
+        @profile_path ||= File.join(profiles_dir, profile_basename)
+      end
+
+      def launch
+        maybe_relaunch_as_target_user
+
+        catalog_path = File.join(profiles_dir, 'profiles.ini')
 
         if File.exist?(catalog_path)
           ini = IniFile.new(filename: catalog_path, separator: '')
@@ -166,7 +176,7 @@ module BrowserLauncher
           Path: profile_basename,
         }
 
-        FileUtils.mkdir_p(catalog_dir)
+        FileUtils.mkdir_p(profiles_dir)
         ini.write(filename: catalog_path)
 
         FileUtils.mkdir_p(profile_path)
