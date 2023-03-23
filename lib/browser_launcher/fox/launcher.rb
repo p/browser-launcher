@@ -25,6 +25,8 @@ module BrowserLauncher
         end
       end
 
+      private
+
       def process_args
         OptionParser.new do |opts|
           opts.banner = "Usage: launch-fox [options]"
