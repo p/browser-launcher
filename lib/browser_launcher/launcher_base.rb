@@ -1,5 +1,5 @@
 module BrowserLauncher
-  class LaunchBase
+  class LauncherBase
     def initialize
       @options = {}
 
