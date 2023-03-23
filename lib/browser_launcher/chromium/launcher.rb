@@ -70,12 +70,6 @@ module BrowserLauncher
         end
       end
 
-      attr_reader :options
-
-      def data_path
-        File.join(File.dirname(__FILE__), '../../../data/fox')
-      end
-
       def profile
         options[:profile_name] || 'default'
       end
