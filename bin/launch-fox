@@ -48,6 +48,10 @@ OptionParser.new do |opts|
     options[:group_accessible] = true
   end
 
+  opts.on('-G', '--gui', 'Report errors using yad (for invocation from e.g. window manager menu)') do
+    options[:gui] = true
+  end
+
   opts.on("-p", "--profile=NAME", "Use specified profile name") do |v|
     options[:profile_name] = v
   end
