@@ -23,7 +23,7 @@ OptionParser.new do |opts|
 
   opts.on("-b", "--binary=PATH", "Launch the binary at PATH (default: firefox)") do |v|
     if v.include?('/')
-      verify_path_exists(v, 'Firefox binary')
+      verify_path_exists(v, 'binary')
     else
       # TODO locate the binary in PATH, warn/error if missing
     end
