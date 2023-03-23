@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
+require 'optparse'
 require 'fileutils'
 require 'json'
 require 'inifile'
-require 'optparse'
-require 'etc'
 require 'browser_launcher/utils'
 require 'browser_launcher/launcher_base'
 
@@ -79,8 +78,6 @@ module BrowserLauncher
         end
       end
 
-      attr_reader :options
-
       def data_path
         File.join(File.dirname(__FILE__), '../../../data/fox')
       end
@@ -93,81 +90,48 @@ module BrowserLauncher
         options[:binary_path] || 'firefox'
       end
 
-      def gui?
-        !!options[:gui]
+      def build_cmd
+        cmd = []
+        if certs = options[:ca_certs]
+          certs.each do |ca_path|
+            ARGV << '-c' << ca_path
+          end
+        end
+        if options[:gui]
+          cmd << '-G'
+        end
+        options[:extensions]&.each do |ext|
+          cmd += ['-e', ext]
+        end
+        if ds = options[:default_search_name]
+          cmd += ['-S', ds]
+        end
+        if path = options[:user_js_path]
+          cmd += ['--user-js', path]
+        end
+        if path = options[:user_chrome_css_path]
+          cmd += ['--user-chrome-css', path]
+        end
+        if path = options[:user_content_css_path]
+          cmd += ['--user-content-css', path]
+        end
+        if name = options[:profile_name]
+          cmd += ['-p', name]
+        end
+        if path = options[:binary_path]
+          cmd += ['-b', path]
+        end
+        if path = options[:policies_path]
+          cmd += ['--policies', path]
+        end
+        if options[:group_accessible]
+          cmd << '-g'
+        end
+        cmd += ARGV
       end
 
       def launch
-        target_user = options[:user] || profile
-        unless target_user.start_with?('br-')
-          target_user = "br-#{target_user}"
-        end
-        if Etc.getpwuid(Process.euid).name != target_user
-          begin
-            Etc.getpwnam(target_user)
-          rescue ArgumentError => e
-            if e.message =~ /can't find user/
-              if options[:user]
-                # User was explicitly requested
-                raise
-              else
-                # Ignore
-              end
-            else
-              raise
-            end
-          else
-            puts "Relaunching as #{target_user}"
-            cmd = ['sudo', '-nu', target_user, 'id']
-            Utils.run(cmd)
-            auths = `xauth list`.strip.split("\n")
-            auths.each do |auth|
-              cmd = ['sudo', '-nu', target_user,
-                'env', "XAUTHORITY=/home/#{target_user}/.Xauthority",
-                'xauth', 'add'] + auth.split(/\s+/)
-              Utils.run(cmd)
-            end
-            if certs = options[:ca_certs]
-              certs.each do |ca_path|
-                ARGV << '-c' << ca_path
-              end
-            end
-            cmd = %w(sudo -nu) + [target_user, 'env', "XAUTHORITY=/home/#{target_user}/.Xauthority", File.realpath(File.expand_path($0))]
-            if options[:gui]
-              cmd << '-G'
-            end
-            options[:extensions]&.each do |ext|
-              cmd += ['-e', ext]
-            end
-            if ds = options[:default_search_name]
-              cmd += ['-S', ds]
-            end
-            if path = options[:user_js_path]
-              cmd += ['--user-js', path]
-            end
-            if path = options[:user_chrome_css_path]
-              cmd += ['--user-chrome-css', path]
-            end
-            if path = options[:user_content_css_path]
-              cmd += ['--user-content-css', path]
-            end
-            if name = options[:profile_name]
-              cmd += ['-p', name]
-            end
-            if path = options[:binary_path]
-              cmd += ['-b', path]
-            end
-            if path = options[:policies_path]
-              cmd += ['--policies', path]
-            end
-            if options[:group_accessible]
-              cmd << '-g'
-            end
-            cmd += ARGV
-            puts "Executing #{cmd.join(' ')}"
-            exec(*cmd)
-          end
-        end
+        maybe_relaunch_as_target_user
 
         profiles_dir = case File.basename(binary_path)
         when 'waterfox'
@@ -324,36 +288,7 @@ module BrowserLauncher
         # Waterfox and waterfox classic put profiles in the same place, ugh.
         #exec(binary, '-P', profile)
         cmd = [binary_path, '--no-remote', '--profile', profile_path]
-        joined = cmd.join(' ')
-        puts "Executing #{joined}"
-        if pid = fork
-          if options[:group_accessible]
-            Thread.new do
-              sleep 2
-              begin
-                FileUtils.chmod_R('g+rwX', profile_path)
-              rescue SystemCallError => exc
-                warn "Error chmodding profile dir: #{exc.class}: #{exc}"
-              end
-              loop do
-                puts 'chmod'
-                begin
-                  FileUtils.chmod_R('g+rwX', profile_path)
-                rescue SystemCallError => exc
-                  warn "Error chmodding profile dir: #{exc.class}: #{exc}"
-                end
-                sleep 5
-              end
-            end
-          end
-
-          Process.wait(pid)
-          if $?.exitstatus != 0
-            raise "Failed to run #{joined}: process exited with code #{$?.exitstatus}"
-          end
-        else
-          exec(*cmd)
-        end
+        run_browser(cmd)
       end
     end
   end
