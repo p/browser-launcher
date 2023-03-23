@@ -18,8 +18,8 @@ end.parse!
 
 $: << File.join(File.dirname(__FILE__), '../lib/ruby')
 
-require 'chromium_configurator'
+require 'browser_launcher/chromium/configurator'
 
 path = ARGV.shift || File.expand_path('~')
 
-ChromiumConfigurator.new(path, new: options[:new], ca_certs: options[:ca_certs]).configure
+BrowserLauncher::Chromium::Configurator.new(path, new: options[:new], ca_certs: options[:ca_certs]).configure
