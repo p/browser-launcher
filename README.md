@@ -59,6 +59,15 @@ https://github.com/Aris-t2/CustomCSSforFx
 https://www.userchrome.org/what-is-userchrome-css.html
 https://www-archive.mozilla.org/unix/customizing.html
 
+### Session Restore
+
+Reference: https://support.mozilla.org/en-US/questions/1182594
+
+To restore: `browser.sessionstore.resume_from_crash` -> `true`,
+`browser.sessionstore.max_resumed_crashes` -> `10`.
+To not restore: `browser.sessionstore.resume_from_crash` -> `false`.
+To prompt before restoring: `browser.sessionstore.max_resumed_crashes` -> `0`.
+
 ### Privacy
 
 Decentraleyes - common js rerouter extension
