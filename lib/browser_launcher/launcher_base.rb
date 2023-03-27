@@ -42,13 +42,25 @@ module BrowserLauncher
       yield
     rescue => exc
       if gui?
-        Utils.run(['yad', '--title', 'Error launching browser',
-          '--text', "#{exc.class}: #{exc}",
-          '--button', 'OK'])
-        # TODO fallback to zenity if it is available and yad is not.
+        if have_bin?('yad')
+          Utils.run(['yad', '--title', 'Error launching browser',
+            '--text', "#{exc.class}: #{exc}",
+            '--button', 'OK'])
+        elsif have_bin?('zenity')
+          # TODO this command line may need adjusting.
+          Utils.run(['zenity', '--title', 'Error launching browser',
+            '--text', "#{exc.class}: #{exc}",
+            '--button', 'OK'])
+        end
         exit 1
       else
         raise
+      end
+    end
+
+    def have_bin?(name)
+      ENV.fetch('PATH').split(':').any? do |dir|
+        File.exist?(File.join(dir, name))
       end
     end
 
