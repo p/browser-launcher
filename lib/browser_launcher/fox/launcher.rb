@@ -13,6 +13,8 @@ module BrowserLauncher
 
       private
 
+      DATA_PATH = File.join(File.dirname(__FILE__), '../../../data/fox')
+
       def process_args
         OptionParser.new do |opts|
           opts.banner = "Usage: launch-fox [options]"
