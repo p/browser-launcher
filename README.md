@@ -35,6 +35,17 @@ https://www.waterfox.net/support/WINNT/profiles-where-waterfox-stores-user-data/
 - http://kb.mozillazine.org/Determine_extension_ID
 - https://www.ghacks.net/2016/08/14/override-firefox-add-on-signing-requirement/
 - https://firefox-source-docs.mozilla.org/mozbase/mozprofile.html
+- https://discourse.mozilla.org/t/what-is-the-easiest-way-to-install-a-local-unsigned-add-on-permanently/52005/3
+- https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/
+- https://riptutorial.com/firefox-addon/example/26613/installing-a-temporary-add-on
+- https://stackoverflow.com/questions/27155766/how-to-install-unpacked-extension-in-firefox-chrome
+- https://www.addictivetips.com/web/how-to-install-unsigned-add-ons-in-firefox-43/
+- https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings
+- https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/
+
+- https://wiki.mozilla.org/Add-ons/Extension_Signing
+plus [here](https://addons-server.readthedocs.io/en/latest/topics/api/signing.html)
+and [here](https://github.com/mozilla/sign-addon)
 
 ### Policies
 
