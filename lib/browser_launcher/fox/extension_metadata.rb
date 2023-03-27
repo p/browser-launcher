@@ -21,7 +21,7 @@ module BrowserLauncher
         else
           {
             schemaVersion: 24,
-            addons: addons,
+            addons: [],
           }
         end
         @data = ActiveSupport::HashWithIndifferentAccess.new(data)
