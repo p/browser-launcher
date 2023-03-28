@@ -4,6 +4,7 @@
 
 https://peter.sh/experiments/chromium-command-line-switches/
 https://superuser.com/questions/1343290/disable-chrome-session-restore-popup
+https://stackoverflow.com/questions/68855734/how-to-setup-chrome-sandbox-on-docker-container
 
 ### Policies
 
