@@ -54,6 +54,9 @@ incompatible with the installed browser.
 The extension will load even if it is unsigned (e.g., after `META-INF`
 subdirectory is removed).
 
+References:
+[1](https://support.mozilla.org/en-US/kb/deploying-firefox-with-extensions).
+
 Option 2: place the XPI extension package into `distribution/extensions/ID.xpi`
 under the browser installation directory. `ID` is the identifier of the
 extension obtained as described in the previous section.
@@ -66,7 +69,9 @@ If the XPI package is as obtained from `addons.mozilla.org`, the extension
 will load even if `strict_min_version` implies it is incompatible with
 the installed browser.
 
-- https://support.mozilla.org/en-US/kb/deploying-firefox-with-extensions
+References:
+[1](https://support.mozilla.org/en-US/kb/deploying-firefox-with-extensions).
+
 - http://kb.mozillazine.org/Installing_extensions
 - http://kb.mozillazine.org/Determine_extension_ID
 - https://www.ghacks.net/2016/08/14/override-firefox-add-on-signing-requirement/
