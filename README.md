@@ -86,6 +86,15 @@ Decentraleyes - common js rerouter extension
 
 Facebook containers/multi-container extension - interesting
 
+### Extensions
+
+Meta:
+
+- https://github.com/xiaoxiaoflood/firefox-scripts
+
+Specific functionality:
+
+- https://github.com/onemen/TabMixPlus
 
 ## X11
 
