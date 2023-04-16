@@ -32,6 +32,41 @@ https://www.waterfox.net/support/WINNT/profiles-where-waterfox-stores-user-data/
 
 ### Extension Installation
 
+Option 1: place the unpacked extension into `distribution/extensions/ID`
+subdir of the browser installation directory. `ID` is the identifier of
+the extension, obtained as follows:
+
+- If the extension has a `manifest.json`, it'll be under `applications` key,
+e.g.:
+
+    "applications": {
+      "gecko": {
+        "id": "{66E978CD-981F-47DF-AC42-E3CF417C1467}",
+        "strict_min_version": "57.0"
+      }
+    }
+
+In this case, the identifier is `{66E978CD-981F-47DF-AC42-E3CF417C1467}`.
+
+The extension will load even if `strict_min_version` implies it is
+incompatible with the installed browser.
+
+The extension will load even if it is unsigned (e.g., after `META-INF`
+subdirectory is removed).
+
+Option 2: place the XPI extension package into `distribution/extensions/ID.xpi`
+under the browser installation directory. `ID` is the identifier of the
+extension obtained as described in the previous section.
+
+This option works with XPI packages distributed by `addons.mozilla.org`.
+Extracting the contents of an XPI file with `unzip` and repacking it with `zip`
+produces an XPI file that no longer works via this option.
+
+If the XPI package is as obtained from `addons.mozilla.org`, the extension
+will load even if `strict_min_version` implies it is incompatible with
+the installed browser.
+
+- https://support.mozilla.org/en-US/kb/deploying-firefox-with-extensions
 - http://kb.mozillazine.org/Installing_extensions
 - http://kb.mozillazine.org/Determine_extension_ID
 - https://www.ghacks.net/2016/08/14/override-firefox-add-on-signing-requirement/
