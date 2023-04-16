@@ -55,7 +55,8 @@ The extension will load even if it is unsigned (e.g., after `META-INF`
 subdirectory is removed).
 
 References:
-[1](https://support.mozilla.org/en-US/kb/deploying-firefox-with-extensions).
+[description](https://support.mozilla.org/en-US/kb/deploying-firefox-with-extensions),
+[how to get extension id from manifest.json](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings).
 
 Option 2: place the XPI extension package into `distribution/extensions/ID.xpi`
 under the browser installation directory. `ID` is the identifier of the
@@ -70,7 +71,8 @@ will load even if `strict_min_version` implies it is incompatible with
 the installed browser.
 
 References:
-[1](https://support.mozilla.org/en-US/kb/deploying-firefox-with-extensions).
+[description](https://support.mozilla.org/en-US/kb/deploying-firefox-with-extensions),
+[how to get extension id from manifest.json](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_specific_settings).
 
 - http://kb.mozillazine.org/Installing_extensions
 - http://kb.mozillazine.org/Determine_extension_ID
