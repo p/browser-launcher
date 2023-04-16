@@ -1,3 +1,7 @@
+require 'active_support'
+require 'active_support/core_ext/hash/conversions'
+require 'json'
+
 module BrowserLauncher
   module Fox
     module ManifestParser

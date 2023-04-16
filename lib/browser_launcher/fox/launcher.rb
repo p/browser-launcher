@@ -73,10 +73,48 @@ module BrowserLauncher
           opts.on("--policies=PATH", "Path to policies.json") do |v|
             options[:policies_path] = Utils.verify_path_exists(v, 'policies.json')
           end
+
+          opts.on('--install-global-ext=PATH', '-I', 'Install global extension at PATH into browser directory specified by -b') do |v|
+            options[:install_global_ext] = v
+          end
         end.parse!
 
         if ARGV.any?
           raise "launch-fox does not accept positional arguments"
+        end
+
+        if path = options[:install_global_ext]
+          require 'browser_launcher/fox/extension'
+
+          dest_path = options[:binary_path]
+          if dest_path.nil?
+            raise "Use -b to specify path to browser installation or fox binary"
+          end
+          unless File.directory?(dest_path)
+            dest_path = File.dirname(dest_path)
+          end
+
+          # Sanity check
+          unless File.exist?(File.join(dest_path, 'libxul.so'))
+            raise "#{dest_path} does not look like a browser installation root"
+          end
+
+          dest_path = File.join(dest_path, 'distribution/extensions')
+          FileUtils.mkdir_p(dest_path)
+
+          meta = Extension.new(path)
+          dest = File.join(dest_path, meta.ext_id)
+
+          if File.directory?(path)
+            FileUtils.rm_rf(dest)
+            FileUtils.cp_r(path, dest)
+          else
+            dest = "#{dest}.xpi"
+            FileUtils.rm_f(dest)
+            FileUtils.cp(path, dest)
+          end
+
+          exit
         end
       end
 

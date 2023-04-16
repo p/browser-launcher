@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-require 'zip'
 require 'browser_launcher/fox/manifest_parser'
 
 module BrowserLauncher
   module Fox
-    class PackedExtension
+    class UnpackedExtension
       include ManifestParser
 
       def initialize(path)
@@ -20,18 +19,14 @@ module BrowserLauncher
         :name, :description, :creator, :target_application
 
       def load!
-        install_rdf = nil
-        manifest_json = nil
+        install_rdf = File.join(path, 'install.rdf')
+        unless File.exist?(install_rdf)
+          install_rdf = nil
+        end
 
-        Zip::File.open(path) do |zip|
-          zip.each do |entry|
-            if entry.name == 'install.rdf'
-              install_rdf = entry.get_input_stream.read
-            end
-            if entry.name == 'manifest.json'
-              manifest_json = entry.get_input_stream.read
-            end
-          end
+        manifest_json = File.join(path, 'manifest.json')
+        unless File.exist?(manifest_json)
+          manifest_json = nil
         end
 
         if install_rdf.nil? && manifest_json.nil?
@@ -43,9 +38,9 @@ module BrowserLauncher
         end
 
         if install_rdf
-          load_install_rdf(install_rdf)
+          load_install_rdf(File.read(install_rdf))
         else
-          load_manifest_json(manifest_json)
+          load_manifest_json(File.read(manifest_json))
         end
       end
     end
