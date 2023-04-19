@@ -28,9 +28,9 @@ module BrowserLauncher
             options[:binary_path] = v
           end
 
-          opts.on("-c", "--ca=PATH", "Add a CA certificate to trust store (can be given more than once)") do |value|
+          opts.on("-c", "--ca=PATH", "Add a CA certificate to trust store (can be given more than once)") do |v|
             options[:ca_certs] ||= []
-            options[:ca_certs] << Utils.verify_path_exists(value, 'CA certificate')
+            options[:ca_certs] << Utils.verify_path_exists(v, 'CA certificate')
           end
 
           opts.on("-S", "--default-search=NAME", "Specify default search engine name") do |v|
@@ -39,7 +39,7 @@ module BrowserLauncher
 
           opts.on("-e", "--ext=PATH", "Load unpacked extension at PATH (can be given more than once)") do |v|
             options[:extensions] ||= []
-            options[:extensions] << Utils.verify_path_exists(v, 'unpacked extension')
+            options[:extensions] << v
           end
 
           opts.on("-f", "--force", "Launch even when requested resources (extensions, CA certs, configuration files) are not present") do
@@ -120,6 +120,10 @@ module BrowserLauncher
 
           exit
         end
+
+        options[:extensions] = Utils.check_or_filter_paths(
+          options[:extensions], "Unpacked extension",
+          force: options[:force], gui: options[:gui])
       end
 
       def data_path
