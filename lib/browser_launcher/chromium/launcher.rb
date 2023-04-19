@@ -23,9 +23,9 @@ module BrowserLauncher
             options[:binary_path] = v
           end
 
-          opts.on("-c", "--ca=PATH", "Add a CA certificate to trust store (can be given more than once)") do |value|
+          opts.on("-c", "--ca=PATH", "Add a CA certificate to trust store (can be given more than once)") do |v|
             options[:ca_certs] ||= []
-            options[:ca_certs] << Utils.verify_path_exists(value, 'CA certificate')
+            options[:ca_certs] << v
           end
 
           opts.on("-S", "--default-search=NAME", "Specify default search engine name") do |v|
@@ -34,7 +34,7 @@ module BrowserLauncher
 
           opts.on("-e", "--ext=PATH", "Load unpacked extension at PATH (can be given more than once)") do |v|
             options[:extensions] ||= []
-            options[:extensions] << Utils.verify_path_exists(v, 'unpacked extension')
+            options[:extensions] << v
           end
 
           opts.on("-E", "--exist-ext PATH", "Load unpacked extension at PATH if it exists") do |v|
@@ -42,6 +42,10 @@ module BrowserLauncher
               options[:extensions] ||= []
               options[:extensions] << v
             end
+          end
+
+          opts.on("-f", "--force", "Launch even when extensions and CA certs requested are not present") do
+            options[:force] = true
           end
 
           opts.on('-g', '--group-access', 'Make profile directory group-accessible (read & write)') do
@@ -68,6 +72,13 @@ module BrowserLauncher
         if ARGV.any?
           raise "launch-chromium does not accept positional arguments"
         end
+
+        options[:extensions] = Utils.check_or_filter_paths(
+          options[:extensions], "Unpacked extension",
+          force: options[:force], gui: options[:gui])
+        options[:ca_certificates] = Utils.check_or_filter_paths(
+          options[:ca_certificates], "CA certificate",
+          force: options[:force], gui: options[:gui])
       end
 
       def profile
@@ -118,6 +129,9 @@ module BrowserLauncher
         cmd += ['-b', binary_path]
         if options[:group_accessible]
           cmd << '-g'
+        end
+        if options[:force]
+          cmd << '-f'
         end
         cmd += ARGV
       end

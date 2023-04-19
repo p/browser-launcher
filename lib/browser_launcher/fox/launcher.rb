@@ -42,6 +42,10 @@ module BrowserLauncher
             options[:extensions] << Utils.verify_path_exists(v, 'unpacked extension')
           end
 
+          opts.on("-f", "--force", "Launch even when requested resources (extensions, CA certs, configuration files) are not present") do
+            options[:force] = true
+          end
+
           opts.on('-g', '--group-access', 'Make profile directory group-accessible (read & write)') do
             options[:group_accessible] = true
           end
@@ -166,6 +170,9 @@ module BrowserLauncher
         end
         if options[:group_accessible]
           cmd << '-g'
+        end
+        if options[:force]
+          cmd << '-f'
         end
         cmd += ARGV
       end
