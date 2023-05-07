@@ -15,14 +15,29 @@ module BrowserLauncher
 
       attr_reader :path
 
+      def default
+        {
+          schemaVersion: 24,
+          addons: [],
+        }
+      end
+
       def load!
         data = if File.exist?(path)
-          JSON.load(File.read(path))
+          File.open(path) do |f|
+            begin
+              JSON.load(f)
+            rescue JSON::ParserError => exc
+              msg = exc.to_s
+              if msg.length > 300
+                msg = msg[0..150] + '...' + msg[-150...-1]
+              end
+              puts "Error parsing extensions metadata: #{exc.class}: #{msg}"
+              default
+            end
+          end
         else
-          {
-            schemaVersion: 24,
-            addons: [],
-          }
+          default
         end
         @data = ActiveSupport::HashWithIndifferentAccess.new(data)
       end
