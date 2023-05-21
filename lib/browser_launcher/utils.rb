@@ -27,21 +27,14 @@ module BrowserLauncher
           path
         else
           if force
+            title = 'Requested componentmissing'
             msg = "#{desc} path does not exist: #{path}, removing"
-            if gui
-              gui_msg('Requested component missing', msg)
-            else
-              warn(msg)
-            end
+            warning(title, msg, gui: gui)
             nil
           else
+            title = 'Requested component missing'
             msg = "#{desc} path does not exist: #{path}"
-            if gui
-              gui_msg('Requested component missing', msg)
-              exit 1
-            else
-              raise msg
-            end
+            error(title, msg, gui: gui)
           end
         end
       end&.compact
@@ -55,6 +48,23 @@ module BrowserLauncher
         exit 1
       else
         raise
+      end
+    end
+
+    module_function def warning(title, msg, gui:)
+      if gui
+        gui_msg(title, msg)
+      else
+        warn(msg)
+      end
+    end
+
+    module_function def error(title, msg, gui:)
+      if gui
+        gui_msg(title, msg)
+        exit 1
+      else
+        raise msg
       end
     end
 

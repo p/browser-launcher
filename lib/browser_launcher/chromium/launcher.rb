@@ -147,6 +147,23 @@ module BrowserLauncher
           profile_args = ["HOME=#{profile_base}", "XDG_HOME=#{profile_base}"]
         end
 
+        # Chromium disrespects umask for downloads directory, try to fix.
+        dl_target = if target_user == "br-#{profile}"
+          "/home/br-downloads/#{target_user}"
+        else
+          "/home/br-downloads/#{target_user}/#{profile}"
+        end
+        FileUtils.mkdir_p(dl_target)
+        dl_local = File.join(profile_base, 'Downloads')
+        if File.directory?(dl_local)
+          Utils.warning("Downloads directory is a directory",
+            "Downloads directory is a a directory, not a symlink:\n#{dl_local}",
+            gui: options[:gui])
+          FileUtils.chmod(0770, dl_local)
+        elsif !File.exist?(dl_local)
+          FileUtils.ln_s(dl_target, dl_local)
+        end
+
         extension_arg = if options[:extensions]
           "--load-extension=#{options[:extensions].join(',')}"
         else
