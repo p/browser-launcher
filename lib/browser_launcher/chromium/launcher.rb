@@ -64,6 +64,10 @@ module BrowserLauncher
             options[:profile_name] = v
           end
 
+          opts.on('--no-restore', 'Do not restore session and disable associated UI') do
+            options[:restore] = false
+          end
+
           opts.on("-u", "--user=USER", "Launch as given user") do |v|
             options[:user] = v
           end
@@ -179,10 +183,12 @@ module BrowserLauncher
           '--disable-notifications',
           '--disable-smooth-scrolling',
           '--disable-sync',
-          '--disable-session-crashed-bubble',
           '--disable-gaia-services',
           *extension_arg,
         ]
+        if options[:new] || options[:restore] == false
+          cmd << '--disable-session-crashed-bubble'
+        end
         run_browser(cmd)
       end
     end
