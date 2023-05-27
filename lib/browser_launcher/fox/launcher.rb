@@ -238,13 +238,16 @@ module BrowserLauncher
           FileUtils.cp(path, File.join(chrome_path, 'user.js'))
         end
         if path = options[:user_chrome_css_path]
+          FileUtils.rm_f(File.join(chrome_path, 'userChrome.css'))
           FileUtils.cp(path, File.join(chrome_path, 'userChrome.css'))
         end
         if path = options[:user_content_css_path]
+          FileUtils.rm_f(File.join(chrome_path, 'userContent.css'))
           FileUtils.cp(path, File.join(chrome_path, 'userContent.css'))
         end
         if path = options[:policies_path]
           FileUtils.mkdir_p(File.join(profile_path, 'system/distribution'))
+          FileUtils.rm_f(File.join(profile_path, 'system/distribution/policies.json'))
           FileUtils.cp(path, File.join(profile_path, 'system/distribution/policies.json'))
         end
 
