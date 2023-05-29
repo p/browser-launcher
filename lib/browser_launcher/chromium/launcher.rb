@@ -159,12 +159,14 @@ module BrowserLauncher
         end
         FileUtils.mkdir_p(dl_target)
         dl_local = File.join(profile_base, 'Downloads')
-        if !File.symlink?(dl_local)
-          Utils.warning("Downloads directory not a symlink",
-            "Downloads directory is not a symlink:\n#{dl_local}",
-            gui: options[:gui])
-          FileUtils.chmod(0770, dl_local)
-        elsif !File.exist?(dl_local)
+        if File.exist?(dl_local)
+          if !File.symlink?(dl_local)
+            Utils.warning("Downloads directory not a symlink",
+              "Downloads directory is not a symlink:\n#{dl_local}",
+              gui: options[:gui])
+            FileUtils.chmod(0770, dl_local)
+          end
+        else
           FileUtils.ln_s(dl_target, dl_local)
         end
 
