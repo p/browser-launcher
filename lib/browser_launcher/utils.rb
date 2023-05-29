@@ -1,13 +1,25 @@
 module BrowserLauncher
   module Utils
 
+    class SpawnedProcessErrorExit < StandardError
+      def initialize(cmd, exitstatus)
+        @cmd = cmd
+        @exitstatus = exitstatus
+        message = "Failed to run #{cmd}: process exited with code #{exitstatus}"
+        super(message)
+      end
+
+      attr_reader :cmd
+      attr_reader :exitstatus
+    end
+
     module_function def run(cmd)
       joined = cmd.join(' ')
       puts "Executing #{joined}"
       if pid = fork
         Process.wait(pid)
         if $?.exitstatus != 0
-          raise "Failed to run #{joined}: process exited with code #{$?.exitstatus}"
+          raise SpawnedProcessErrorExit.new(joined, $?.exitstatus)
         end
       else
         exec(*cmd)
@@ -72,6 +84,13 @@ module BrowserLauncher
       run(['yad', '--title', title,
         '--text', text,
         '--button', 'OK'])
+    rescue SpawnedProcessErrorExit => exc
+      # When message box is dismissed via Esc, process exit status is 252
+      if exc.exitstatus == 252
+        # Silence
+      else
+        raise
+      end
     end
 
     module_function def monotime
