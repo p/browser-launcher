@@ -74,5 +74,9 @@ module BrowserLauncher
         '--button', 'OK'])
     end
 
+    module_function def monotime
+      Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    end
+
   end
 end

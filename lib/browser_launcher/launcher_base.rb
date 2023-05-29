@@ -139,12 +139,19 @@ module BrowserLauncher
           end
         end
 
+        started_at = Utils.monotime
+
         # This blocks the process including all background threads.
         # Do this even if we looped above waiting for kill to fail
         # in case the kill failed due to an error, not due to the target
         # process exiting.
         Process.wait(pid)
-        if $?.exitstatus != 0
+        elapsed = Utils.monotime - started_at
+        # If the process ran for over 2 minutes, it was most likely
+        # killed by user rather than died on its own.
+        # The diagnostics here is meant to apply to the proces not starting.
+        # It's unnecessary when the process has been killed by user.
+        if elapsed <= 120 && $?.exitstatus != 0
           raise "Failed to run #{joined}: process exited with code #{$?.exitstatus}"
         end
       else
