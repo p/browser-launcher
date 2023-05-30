@@ -3,6 +3,7 @@ autoload :JSON, 'json'
 autoload :YAML, 'yaml'
 autoload :Find, 'find'
 autoload :Zip, 'zip'
+require 'browser_launcher/utils'
 
 module BrowserLauncher
   module Chromium
@@ -48,6 +49,9 @@ module BrowserLauncher
           File.open(config_pathname.join('Local State')) do |f|
             puts YAML.dump(JSON.load(f))
           end
+        elsif options[:dump_cookies]
+          cookies_path = default_pathname.join('Cookies')
+          BrowserLauncher::Utils.run(['sqlite3', cookies_path.to_s, '.dump'])
         end
       end
 

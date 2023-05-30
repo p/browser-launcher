@@ -6,6 +6,10 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: chromium-profile option..."
 
+  opts.on("--dump-cookies", "Dump cookies") do
+    options[:dump_cookies] = true
+  end
+
   opts.on("--dump-local-state", "Dump local state") do
     options[:dump_local_state] = true
   end
