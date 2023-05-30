@@ -1,5 +1,6 @@
 require 'pathname'
 autoload :JSON, 'json'
+autoload :FileUtils, 'fileutils'
 autoload :YAML, 'yaml'
 autoload :Find, 'find'
 autoload :Zip, 'zip'
@@ -16,6 +17,10 @@ module BrowserLauncher
 
       def run
         if out_path = options[:save_session]
+          if File.exist?(out_path)
+            FileUtils.rm(out_path)
+          end
+          # create option appends to existing file, thus rm earlier.
           Zip::File.open(out_path, create: true) do |zip|
             start = profile_pathname.join('.config/chromium/Default').to_s
             Find.find(start) do |path|
@@ -33,6 +38,14 @@ module BrowserLauncher
               then
                 zip.get_output_stream(archive_path) do |f|
                   f << File.read(path)
+                end
+              end
+            end
+            cookies_path = default_pathname.join('Cookies')
+            if cookies_path.exist?
+              zip.get_output_stream('.config/chromium/Default/Cookies.sql') do |f|
+                BrowserLauncher::Utils.run_stdout(['sqlite3', cookies_path.to_s, '.dump']) do |chunk|
+                  f << chunk
                 end
               end
             end

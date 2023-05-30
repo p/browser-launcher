@@ -16,13 +16,37 @@ module BrowserLauncher
     module_function def run(cmd)
       joined = cmd.join(' ')
       puts "Executing #{joined}"
-      if pid = fork
-        Process.wait(pid)
-        if $?.exitstatus != 0
-          raise SpawnedProcessErrorExit.new(joined, $?.exitstatus)
-        end
-      else
+
+      pid = fork do
         exec(*cmd)
+      end
+
+      Process.wait(pid)
+      if $?.exitstatus != 0
+        raise SpawnedProcessErrorExit.new(joined, $?.exitstatus)
+      end
+    end
+
+    module_function def run_stdout(cmd)
+      joined = cmd.join(' ')
+      rd, wr = IO.pipe
+      puts "Executing #{joined}"
+
+      pid = fork do
+        rd.close
+        STDOUT.reopen(wr)
+        wr.close
+        exec(*cmd)
+      end
+
+      wr.close
+      while chunk = rd.read(1000)
+        yield chunk
+      end
+
+      Process.wait(pid)
+      if $?.exitstatus != 0
+        raise SpawnedProcessErrorExit.new(joined, $?.exitstatus)
       end
     end
 
