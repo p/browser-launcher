@@ -43,6 +43,7 @@ module BrowserLauncher
     rescue => exc
       if gui?
         if have_bin?('yad')
+          puts "#{exc.class}: #{exc}\n\n#{exc.backtrace.join("\n")}"
           Utils.run(['yad', '--title', 'Error launching browser',
             '--text', "#{exc.class}: #{exc}",
             '--button', 'OK'])

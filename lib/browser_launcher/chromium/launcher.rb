@@ -60,6 +60,10 @@ module BrowserLauncher
             options[:new] = true
           end
 
+          opts.on('-o', '--overlay=PATH', 'Copy specified directory or extract specified zip file over base directory') do |v|
+            options[:overlay_path] = v
+          end
+
           opts.on("-p", "--profile=NAME", "Use specified profile name") do |v|
             options[:profile_name] = v
           end
@@ -137,6 +141,9 @@ module BrowserLauncher
         if options[:force]
           cmd << '-f'
         end
+        if overlay_path = options[:overlay_path]
+          cmd += ['-o', overlay_path]
+        end
         cmd += ARGV
       end
 
@@ -153,7 +160,8 @@ module BrowserLauncher
 
         # Chromium disrespects umask for downloads directory, try to fix.
         dl_target = if target_user == "br-#{profile}"
-          "/home/br-downloads/#{target_user}"
+          #"/home/br-downloads/#{target_user}"
+          "/home/br-downloads/#{target_user}/#{profile}"
         else
           "/home/br-downloads/#{target_user}/#{profile}"
         end
@@ -167,6 +175,7 @@ module BrowserLauncher
             FileUtils.chmod(0770, dl_local)
           end
         else
+          FileUtils.mkdir_p(File.dirname(dl_local))
           FileUtils.ln_s(dl_target, dl_local)
         end
 

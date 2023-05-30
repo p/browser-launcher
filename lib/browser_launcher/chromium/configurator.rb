@@ -1,3 +1,4 @@
+autoload :Zip, 'zip'
 require 'pathname'
 require 'fileutils'
 require 'json'
@@ -18,6 +19,10 @@ module BrowserLauncher
       end
 
       def configure
+        if options[:overlay_path]
+          do_overlay
+        end
+
         path = profile_pathname.join('Local State')
 
         if File.exist?(path)
@@ -168,6 +173,27 @@ module BrowserLauncher
         options.fetch(:ca_certs).each do |ca_path|
           puts "Adding #{ca_path}"
           system("certutil -d sql:#{db_dir} -A -n '#{File.basename(ca_path)}' -t 'TCu,Cu,Tu' -i '#{ca_path}'")
+        end
+      end
+
+      def do_overlay
+        path = options.fetch(:overlay_path)
+        if File.directory?(path)
+          FileUtils.copy_entry(path, home_path)
+        else
+          Zip::File.foreach(path) do |entry|
+            next if entry.directory?
+            entry.get_input_stream do |io|
+              write_path = File.join(home_path, entry.name)
+              p write_path
+              FileUtils.mkdir_p(File.dirname(write_path))
+              File.open(write_path, 'w') do |f|
+                while chunk = io.read(10000)
+                  f << chunk
+                end
+              end
+            end
+          end
         end
       end
     end
