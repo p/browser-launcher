@@ -82,4 +82,3 @@ module BrowserLauncher
     end
   end
 end
-
