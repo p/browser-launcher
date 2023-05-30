@@ -40,6 +40,10 @@ module BrowserLauncher
           File.open(default_pathname.join('Preferences')) do |f|
             puts YAML.dump(JSON.load(f))
           end
+        elsif options[:dump_secure_preferences]
+          File.open(default_pathname.join('Secure Preferences')) do |f|
+            puts YAML.dump(JSON.load(f))
+          end
         end
       end
 

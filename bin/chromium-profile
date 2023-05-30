@@ -10,6 +10,10 @@ OptionParser.new do |opts|
     options[:dump_preferences] = true
   end
 
+  opts.on("--dump-secure-prefs", "Dump secure preferences") do
+    options[:dump_secure_preferences] = true
+  end
+
   opts.on("-s", "--save-session=PATH", "Save current session to PATH") do |value|
     options[:save_session] = value
   end
