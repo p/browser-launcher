@@ -23,6 +23,33 @@ https://developer.chrome.com/webstore/inline_installation
 
 https://support.google.com/chrome/a/answer/187948?visit_id=637393417480115480-3521742&rd=1
 
+### Sessions
+
+Files potentially relevant to sessions:
+
+    Cookies
+    Cookies-journal
+    Preferences
+    Secure Preferences
+    Session Storage
+    Sessions
+
+These are a mix of sqlite3 databases and SNSS files.
+
+Description of these files:
+
+- https://digitalinvestigation.wordpress.com/2012/09/03/chrome-session-and-tabs-files-and-the-puzzle-of-the-pickle/
+
+Software to read these files:
+
+- https://github.com/lemnos/chrome-session-dump
+- https://code.google.com/archive/p/ccl-ssns/
+- https://github.com/phacoxcll/SNSS_Reader
+- https://github.com/JRBANCEL/Chromagnon/
+
+Additional references:
+
+- https://softwarerecs.stackexchange.com/questions/19500/tool-to-read-data-from-google-chrome-snss-files
 
 ## Firefox / Waterfox / Pale Moon
 
