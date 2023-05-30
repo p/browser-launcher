@@ -25,7 +25,7 @@ https://support.google.com/chrome/a/answer/187948?visit_id=637393417480115480-35
 
 ### Sessions
 
-Files potentially relevant to sessions:
+Files potentially relevant to sessions (all under `Default` subdir):
 
     Cookies
     Cookies-journal
