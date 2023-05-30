@@ -129,6 +129,16 @@ module BrowserLauncher
         # https://www.howtogeek.com/725208/how-to-turn-off-pop-up-notifications-in-google-chrome/
         content['profile']['default_content_setting_values'] = {'notifications' => 2}
 
+        content['session'] ||= {}
+        # Startup behavior:
+        # 1: continue where you left off
+        # 4: open new tab page
+        # 5: open specific pages
+        #content['session']['restore_on_startup'] = 1
+
+        # Alternatively for ungoogled-chromium:
+        # hide-crashed-bubble
+
         File.open(path, 'w') do |f|
           f << JSON.dump(content)
         end
