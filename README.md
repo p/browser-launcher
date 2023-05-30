@@ -51,6 +51,31 @@ Additional references:
 
 - https://softwarerecs.stackexchange.com/questions/19500/tool-to-read-data-from-google-chrome-snss-files
 
+### Restore Session
+
+- https://www.adlice.com/google-chrome-secure-preferences/
+- https://chrome.google.com/webstore/detail/session-buddy/edacconmaakjimmfgnblocblbcdcpbko
+- https://superuser.com/questions/662329/how-do-i-recover-tab-session-information-from-chrome-chromium
+- https://w3guy.com/save-chrome-browsing-session/
+
+### Secure Preferences
+
+- https://www.cse.chalmers.se/~andrei/cans20.pdf
+- https://superuser.com/questions/1661944/chrome-uses-preferences-and-secure-preferences-to-manage-extensions-whats-the
+- https://www.adlice.com/google-chrome-secure-preferences/
+
+### Session Storage
+
+This uses LevelDB.
+See [here](https://www.cclsolutionsgroup.com/post/hang-on-thats-not-sqlite-chrome-electron-and-leveldb)
+for an introduction.
+
+[Ruby implementation](https://github.com/wmorgan/leveldb-ruby).
+
+Other resources:
+
+- https://dfir.blog/deciphering-browser-hieroglyphics-leveldb-filesystem/
+
 ## Firefox / Waterfox / Pale Moon
 
 ### Files
