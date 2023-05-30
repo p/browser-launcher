@@ -6,6 +6,10 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: chromium-profile option..."
 
+  opts.on("--dump-local-state", "Dump local state") do
+    options[:dump_local_state] = true
+  end
+
   opts.on("--dump-prefs", "Dump preferences") do
     options[:dump_preferences] = true
   end

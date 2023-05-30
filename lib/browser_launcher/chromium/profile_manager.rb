@@ -44,6 +44,10 @@ module BrowserLauncher
           File.open(default_pathname.join('Secure Preferences')) do |f|
             puts YAML.dump(JSON.load(f))
           end
+        elsif options[:dump_local_state]
+          File.open(config_pathname.join('Local State')) do |f|
+            puts YAML.dump(JSON.load(f))
+          end
         end
       end
 
@@ -51,8 +55,12 @@ module BrowserLauncher
         @profile_pathname ||= Pathname.new(options.fetch(:profile_path))
       end
 
+      def config_pathname
+        profile_pathname.join('.config/chromium')
+      end
+
       def default_pathname
-        profile_pathname.join('.config/chromium/Default')
+        config_pathname.join('Default')
       end
     end
   end
