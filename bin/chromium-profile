@@ -6,6 +6,10 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: chromium-profile option..."
 
+  opts.on("--dump-prefs", "Dump preferences") do
+    options[:dump_preferences] = true
+  end
+
   opts.on("-s", "--save-session=PATH", "Save current session to PATH") do |value|
     options[:save_session] = value
   end

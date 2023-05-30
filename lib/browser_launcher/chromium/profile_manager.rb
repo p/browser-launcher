@@ -1,4 +1,6 @@
 require 'pathname'
+autoload :JSON, 'json'
+autoload :YAML, 'yaml'
 autoload :Find, 'find'
 autoload :Zip, 'zip'
 
@@ -34,11 +36,19 @@ module BrowserLauncher
               end
             end
           end
+        elsif options[:dump_preferences]
+          File.open(default_pathname.join('Preferences')) do |f|
+            puts YAML.dump(JSON.load(f))
+          end
         end
       end
 
       def profile_pathname
         @profile_pathname ||= Pathname.new(options.fetch(:profile_path))
+      end
+
+      def default_pathname
+        profile_pathname.join('.config/chromium/Default')
       end
     end
   end
