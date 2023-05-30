@@ -90,6 +90,10 @@ Other resources:
 - [Disable blocking of pasting](https://superuser.com/questions/919625/how-to-paste-text-into-input-fields-that-block-it)
 - [Text (memo) field extension](https://chrome.google.com/webstore/detail/text-field/igigbeogifbmkfgbllimpgdaelhilgkj)
 
+### Keyboard Shortcuts
+
+- https://superuser.com/questions/962871/how-to-exit-the-chromium-search-bar-without-using-the-mouse
+
 ## Firefox / Waterfox / Pale Moon
 
 ### Files
