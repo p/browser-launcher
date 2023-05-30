@@ -76,6 +76,20 @@ Other resources:
 
 - https://dfir.blog/deciphering-browser-hieroglyphics-leveldb-filesystem/
 
+### Search Bar
+
+- https://chrome.google.com/webstore/detail/searchbar/fjefgkhmchopegjeicnblodnidbammed?hl=en
+- https://www.techjunkie.com/add-search-box-chrome/
+
+### Other Interesting Extensions
+
+- https://superuser.com/questions/261689/its-all-text-for-chrome
+
+### Tweaks
+
+- [Disable blocking of pasting](https://superuser.com/questions/919625/how-to-paste-text-into-input-fields-that-block-it)
+- [Text (memo) field extension](https://chrome.google.com/webstore/detail/text-field/igigbeogifbmkfgbllimpgdaelhilgkj)
+
 ## Firefox / Waterfox / Pale Moon
 
 ### Files
