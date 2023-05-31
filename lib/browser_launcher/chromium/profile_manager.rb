@@ -50,7 +50,7 @@ module BrowserLauncher
           Find.find(start) do |path|
             rel_path = path[start.length+1..]
             next unless rel_path
-            next if File.directory?(rel_path)
+            next if File.directory?(path)
             archive_path = path[profile_pathname.to_s.length+1..]
             top_comp = rel_path.sub(%r,/.*,, '')
             if [
