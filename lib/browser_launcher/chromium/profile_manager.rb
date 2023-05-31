@@ -58,6 +58,8 @@ module BrowserLauncher
               'Cookies-journal',
               'Session Storage',
               'Sessions',
+              'Preferences',
+              #'Secure Preferences',
             ].include?(top_comp)
             then
               zip.get_output_stream(archive_path) do |f|
