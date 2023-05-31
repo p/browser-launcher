@@ -13,11 +13,14 @@ module BrowserLauncher
       attr_reader :exitstatus
     end
 
-    module_function def run(cmd)
+    module_function def run(cmd, stdout: nil)
       joined = cmd.join(' ')
       puts "Executing #{joined}"
 
       pid = fork do
+        if stdout
+          STDOUT.reopen(stdout)
+        end
         exec(*cmd)
       end
 

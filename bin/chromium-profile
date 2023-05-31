@@ -22,6 +22,10 @@ OptionParser.new do |opts|
     options[:dump_secure_preferences] = true
   end
 
+  opts.on("-e", "--export=PATH", "Export current session to PATH") do |value|
+    options[:export_session] = value
+  end
+
   opts.on("-s", "--save-session=PATH", "Save current session to PATH") do |value|
     options[:save_session] = value
   end
