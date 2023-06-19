@@ -183,7 +183,7 @@ module BrowserLauncher
 
       def rel_profiles_dir
         @profiles_dir ||= case File.basename(binary_path)
-        when 'waterfox'
+        when 'waterfox', 'waterfox-classic'
           if binary_path =~ /waterfox-classic/
             '.waterfox-classic'
           else
