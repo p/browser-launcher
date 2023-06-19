@@ -52,6 +52,11 @@ module BrowserLauncher
           Utils.run(['zenity', '--title', 'Error launching browser',
             '--text', "#{exc.class}: #{exc}",
             '--button', 'OK'])
+        else
+          warn "Unhandled exception and there is no dialog program available!"
+          warn "#{exc.class}: #{exc}"
+          warn ''
+          warn exc.backtrace.join("\n")
         end
         exit 1
       else
