@@ -220,6 +220,8 @@ Meta:
 Specific functionality:
 
 - https://github.com/onemen/TabMixPlus
+- [Disable JavaScript](https://addons.mozilla.org/en-US/firefox/addon/disable-javascript/) -
+works per-site. [Source/GH](https://github.com/dpacassi/disable-javascript)
 
 ## X11
 
