@@ -7,7 +7,7 @@ autoload :Zip, 'zip'
 require 'browser_launcher/utils'
 
 module BrowserLauncher
-  module Chromium
+  module Fox
     class ProfileManager
       def initialize(**opts)
         @options = opts.dup.freeze
@@ -20,18 +20,6 @@ module BrowserLauncher
           save_session(out_path)
         elsif out_path = options[:export_session]
           export_session(out_path)
-        elsif options[:dump_preferences]
-          File.open(default_pathname.join('Preferences')) do |f|
-            puts YAML.dump(JSON.load(f))
-          end
-        elsif options[:dump_secure_preferences]
-          File.open(default_pathname.join('Secure Preferences')) do |f|
-            puts YAML.dump(JSON.load(f))
-          end
-        elsif options[:dump_local_state]
-          File.open(config_pathname.join('Local State')) do |f|
-            puts YAML.dump(JSON.load(f))
-          end
         elsif options[:dump_cookies]
           BrowserLauncher::Utils.run(['sqlite3', cookies_path, '.dump'])
         end
@@ -45,7 +33,7 @@ module BrowserLauncher
         end
         # create option appends to existing file, thus rm earlier.
         Zip::File.open(out_path, create: true) do |zip|
-          start = default_pathname.to_s
+          start = profile_path
           Find.find(start) do |path|
             rel_path = path[start.length+1..]
             next unless rel_path
@@ -53,12 +41,13 @@ module BrowserLauncher
             archive_path = path[profile_pathname.to_s.length+1..]
             top_comp = rel_path.sub(%r,/.*,, '')
             if [
-              'Cookies',
-              'Cookies-journal',
-              'Session Storage',
-              'Sessions',
-              'Preferences',
-              #'Secure Preferences',
+              'formhistory.sqlite',
+              'search.json.mozlz4',
+              'sessionstore-backups/recovery.jsonlz4',
+              'sessionstore-backups/recovery.baklz4',
+              'cookies.sqlite',
+              #'storage', # local storage?
+              #'storage.sqlite',
             ].include?(top_comp)
             then
               zip.get_output_stream(archive_path) do |f|
@@ -67,7 +56,7 @@ module BrowserLauncher
             end
           end
           if cookies_pathname.exist?
-            zip.get_output_stream('.config/chromium/Default/Cookies.sql') do |f|
+            zip.get_output_stream('cookies.sql') do |f|
               BrowserLauncher::Utils.run_stdout(['sqlite3', cookies_path, '.dump']) do |chunk|
                 f << chunk
               end
@@ -92,10 +81,19 @@ module BrowserLauncher
             end
           end
         end
-        File.open(out_path.join(".config/chromium/Default/Cookies.sql"), 'w') do |out_f|
-          BrowserLauncher::Utils.run(
-            ['sqlite3', cookies_path, '.dump'],
-            stdout: out_f)
+        %w(
+          cookies.sqlite
+          formhistory.sqlite
+        ).each do |rel_path|
+          this_pathname = profile_pathname.join(rel_path)
+          if this_pathname.exist?
+            this_out_path = out_path.join(rel_path.sub(/sqlite$/, 'sql'))
+            File.open(this_out_path, 'w') do |out_f|
+              BrowserLauncher::Utils.run(
+                ['sqlite3', this_pathname.to_s, '.dump'],
+                stdout: out_f)
+            end
+          end
         end
       end
 
@@ -103,16 +101,12 @@ module BrowserLauncher
         @profile_pathname ||= Pathname.new(options.fetch(:profile_path))
       end
 
-      def config_pathname
-        profile_pathname.join('.config/chromium')
-      end
-
-      def default_pathname
-        config_pathname.join('Default')
+      def profile_path
+        profile_pathname.to_s
       end
 
       def cookies_pathname
-        default_pathname.join('Cookies')
+        profile_pathname.join('cookies.sqlite')
       end
 
       def cookies_path

@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: fox-profile option..."
+
+  opts.on("--dump-cookies", "Dump cookies") do
+    options[:dump_cookies] = true
+  end
+
+  opts.on("-e", "--export=PATH", "Export current session to PATH") do |value|
+    options[:export_session] = value
+  end
+
+  opts.on("-s", "--save-session=PATH", "Save current session to PATH") do |value|
+    options[:save_session] = value
+  end
+
+  opts.on("-p", "--profile-path=PATH", "Path to the profile") do |value|
+    options[:profile_path] = value
+  end
+end.parse!
+
+$: << File.join(File.dirname(__FILE__), '../lib')
+
+require 'browser_launcher/fox/profile_manager'
+
+BrowserLauncher::Fox::ProfileManager.new(**options).run
