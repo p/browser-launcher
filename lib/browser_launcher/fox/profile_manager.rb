@@ -5,6 +5,7 @@ autoload :YAML, 'yaml'
 autoload :Find, 'find'
 autoload :Zip, 'zip'
 require 'browser_launcher/utils'
+autoload :LZ4, 'extlz4'
 
 module BrowserLauncher
   module Fox
@@ -67,17 +68,21 @@ module BrowserLauncher
 
       def export_session(out_path)
         out_path = Pathname.new(out_path)
-        [
-          'Default/Preferences',
-          'Default/Secure Preferences',
-          'Local State',
-        ].each do |partial_name|
-          dest = out_path.join(".config/chromium/#{partial_name}.yml")
-          FileUtils.mkdir_p(dest.dirname)
-          p dest
-          File.open(dest, 'w') do |out_f|
-            File.open(config_pathname.join(partial_name)) do |f|
-              out_f << YAML.dump(JSON.load(f))
+        %w(
+          search.json.mozlz4
+          sessionstore-backups/recovery.jsonlz4
+          sessionstore-backups/recovery.baklz4
+        ).each do |rel_path|
+          this_pathname = profile_pathname.join(rel_path)
+          if this_pathname.exist?
+            this_out_path = out_path.join(rel_path.sub(/lz4$/, '').sub(/\.json\.moz$/, '.json'))
+            FileUtils.mkdir_p(File.dirname(this_out_path))
+            File.open(this_out_path, 'w') do |out_f|
+              File.open(this_pathname) do |f|
+                # TODO Verify size
+                f.read(12)
+                out_f.write(LZ4.block_decode(f.read))
+              end
             end
           end
         end
