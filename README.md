@@ -205,6 +205,13 @@ To restore: `browser.sessionstore.resume_from_crash` -> `true`,
 To not restore: `browser.sessionstore.resume_from_crash` -> `false`.
 To prompt before restoring: `browser.sessionstore.max_resumed_crashes` -> `0`.
 
+### File Actions aka Protocol Handlers
+
+- https://support.mozilla.org/en-US/questions/1235051
+- https://support.mozilla.org/en-US/questions/1197107
+- https://searchfox.org/mozilla-release/source/netwerk/mime/nsIMIMEInfo.idl
+- https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/protocol_handlers
+
 ### Privacy
 
 Decentraleyes - common js rerouter extension
