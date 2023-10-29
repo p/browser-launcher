@@ -68,7 +68,11 @@ module BrowserLauncher
             options[:profile_name] = v
           end
 
-          opts.on('--no-restore', 'Do not restore session and disable associated UI') do
+          opts.on('-r', '--restore', 'Restore session if possible') do
+            options[:restore] = true
+          end
+
+          opts.on('-R', '--no-restore', 'Do not restore session and disable associated UI') do
             options[:restore] = false
           end
 
@@ -143,6 +147,16 @@ module BrowserLauncher
         end
         if overlay_path = options[:overlay_path]
           cmd += ['-o', overlay_path]
+        end
+        if options[:new]
+          cmd << '-n'
+        end
+        case options[:restore]
+        when nil
+        when false
+          cmd << '-R'
+        else
+          cmd << '-r'
         end
         cmd += ARGV
       end

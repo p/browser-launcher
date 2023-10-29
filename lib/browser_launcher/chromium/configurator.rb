@@ -139,7 +139,17 @@ module BrowserLauncher
         # 1: continue where you left off
         # 4: open new tab page
         # 5: open specific pages
-        #content['session']['restore_on_startup'] = 1
+        if options[:restore]
+          # https://superuser.com/questions/1697483/how-can-i-setup-chrome-from-the-preferences-file-to-restore-the-tabs-from-last-s
+          content['session']['restore_on_startup'] = 1
+          # Without this chromium still shows the crashed UI even though
+          # it's told to just restore the session.
+          content['profile']['exit_type'] = 'Normal'
+        elsif options[:new]
+          content['session']['restore_on_startup'] = 0
+        else
+          content['session'].delete('restore_on_startup')
+        end
 
         # Alternatively for ungoogled-chromium:
         # hide-crashed-bubble
