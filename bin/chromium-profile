@@ -30,6 +30,10 @@ OptionParser.new do |opts|
     options[:save_session] = value
   end
 
+  opts.on("-r", "--restore-session=PATH", "Restore current session from PATH") do |value|
+    options[:restore_session] = value
+  end
+
   opts.on("-p", "--profile-path=PATH", "Path to the profile") do |value|
     options[:profile_path] = value
   end

@@ -18,6 +18,8 @@ module BrowserLauncher
       def run
         if out_path = options[:save_session]
           save_session(out_path)
+        elsif in_path = options[:restore_session]
+          restore_session(in_path)
         elsif out_path = options[:export_session]
           export_session(out_path)
         elsif options[:dump_preferences]
@@ -72,6 +74,18 @@ module BrowserLauncher
                 f << chunk
               end
             end
+          end
+        end
+      end
+
+      def restore_session(in_path)
+        Zip::File.open(in_path) do |zip|
+          zip.each do |zip_entry|
+            dn = File.dirname(zip_entry.name)
+            dest_dn = profile_pathname.join('.' + dn)
+            FileUtils.mkdir_p(dest_dn)
+            dest_path = File.join(dest_dn, File.basename(zip_entry.name))
+            zip_entry.extract(dest_path)
           end
         end
       end
