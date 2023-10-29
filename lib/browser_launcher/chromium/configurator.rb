@@ -195,7 +195,12 @@ module BrowserLauncher
           Zip::File.foreach(path) do |entry|
             next if entry.directory?
             entry.get_input_stream do |io|
-              write_path = File.join(home_path, entry.name)
+              src_path = if entry.name =~ %r,\Aconfig(\z|/),
+                '.' + entry.name
+              else
+                entry.name
+              end
+              write_path = File.join(home_path, src_path)
               p write_path
               FileUtils.mkdir_p(File.dirname(write_path))
               File.open(write_path, 'w') do |f|
