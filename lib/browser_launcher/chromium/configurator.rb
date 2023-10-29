@@ -144,6 +144,7 @@ module BrowserLauncher
           content['session']['restore_on_startup'] = 1
           # Without this chromium still shows the crashed UI even though
           # it's told to just restore the session.
+          # https://superuser.com/questions/237608/how-to-hide-chrome-warning-after-crash
           content['profile']['exit_type'] = 'Normal'
         elsif options[:new]
           content['session']['restore_on_startup'] = 0
