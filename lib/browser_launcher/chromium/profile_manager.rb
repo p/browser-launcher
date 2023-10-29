@@ -61,6 +61,7 @@ module BrowserLauncher
               'Sessions',
               'Preferences',
               #'Secure Preferences',
+              'Local Extension Settings',
             ].include?(top_comp)
             then
               zip.get_output_stream(archive_path) do |f|
@@ -85,6 +86,7 @@ module BrowserLauncher
             dest_dn = profile_pathname.join('.' + dn)
             FileUtils.mkdir_p(dest_dn)
             dest_path = File.join(dest_dn, File.basename(zip_entry.name))
+            FileUtils.rm_f(dest_path)
             zip_entry.extract(dest_path)
           end
         end
