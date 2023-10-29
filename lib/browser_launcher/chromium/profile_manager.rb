@@ -67,7 +67,7 @@ module BrowserLauncher
             end
           end
           if cookies_pathname.exist?
-            zip.get_output_stream('.config/chromium/Default/Cookies.sql') do |f|
+            zip.get_output_stream('config/chromium/Default/Cookies.sql') do |f|
               BrowserLauncher::Utils.run_stdout(['sqlite3', cookies_path, '.dump']) do |chunk|
                 f << chunk
               end
