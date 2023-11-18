@@ -52,7 +52,7 @@ module BrowserLauncher
             rel_path = path[start.length+1..]
             next unless rel_path
             next if File.directory?(path)
-            archive_path = path[profile_pathname.to_s.length+1..]
+            archive_path = path[profile_pathname.to_s.length+1..].sub(%r,\A\.config/,, 'config/')
             top_comp = rel_path.sub(%r,/.*,, '')
             if [
               'Cookies',
