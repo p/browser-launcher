@@ -52,7 +52,7 @@ module BrowserLauncher
             rel_path = path[start.length+1..]
             next unless rel_path
             next if File.directory?(path)
-            archive_path = path[profile_pathname.to_s.length+1..].sub(%r,\A\.config/,, 'config/')
+            archive_path = path[profile_pathname.to_s.length+1..]
             top_comp = rel_path.sub(%r,/.*,, '')
             if [
               'Cookies',
@@ -70,7 +70,7 @@ module BrowserLauncher
             end
           end
           if cookies_pathname.exist?
-            zip.get_output_stream('config/chromium/Default/Cookies.sql') do |f|
+            zip.get_output_stream('.config/chromium/Default/Cookies.sql') do |f|
               BrowserLauncher::Utils.run_stdout(['sqlite3', cookies_path, '.dump']) do |chunk|
                 f << chunk
               end
@@ -99,16 +99,16 @@ module BrowserLauncher
           'Default/Secure Preferences',
           'Local State',
         ].each do |partial_name|
-          dest = out_path.join(".config/chromium/#{partial_name}.yml")
+          normal_partial_name = partial_name.gsub(' ', '__')
+          dest = out_path.join("config/chromium/#{normal_partial_name}.yml")
           FileUtils.mkdir_p(dest.dirname)
-          p dest
           File.open(dest, 'w') do |out_f|
             File.open(config_pathname.join(partial_name)) do |f|
               out_f << YAML.dump(JSON.load(f))
             end
           end
         end
-        File.open(out_path.join(".config/chromium/Default/Cookies.sql"), 'w') do |out_f|
+        File.open(out_path.join("config/chromium/Default/Cookies.sql"), 'w') do |out_f|
           BrowserLauncher::Utils.run(
             ['sqlite3', cookies_path, '.dump'],
             stdout: out_f)
