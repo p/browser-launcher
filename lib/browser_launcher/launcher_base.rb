@@ -111,25 +111,45 @@ module BrowserLauncher
       end
     end
 
+    def tmpdir_paths
+      Dir.entries('/tmp').reject do |entry|
+        entry == '.' || entry == '..'
+      end.select do |entry|
+        entry.start_with?("mozilla_#{target_user}")
+      end.map do |entry|
+        File.join('/tmp', entry)
+      end
+    end
+
+    def make_group_accessible(path, recurse: false)
+      begin
+        if recurse
+          FileUtils.chmod_R('g+rwX', path, force: true)
+        else
+          FileUtils.chmod('g+rwX', path)
+        end
+      rescue SystemCallError => exc
+        warn "Error making dir group accessible: #{path}: #{exc.class}: #{exc}"
+      end
+    end
+
+    def fix_permissions
+      make_group_accessible(profile_path, recurse: true)
+
+      tmpdir_paths.each do |path|
+        make_group_accessible(path)
+      end
+    end
+
     def run_browser(cmd)
       joined = cmd.join(' ')
       puts "Executing #{joined}"
       if pid = fork
         if options[:group_accessible]
           Thread.new do
-            sleep 2
-            begin
-              FileUtils.chmod_R('g+rwX', profile_path, force: true)
-            rescue SystemCallError => exc
-              warn "Error chmodding profile dir: #{exc.class}: #{exc}"
-            end
             loop do
-              begin
-                FileUtils.chmod_R('g+rwX', profile_path, force: true)
-              rescue SystemCallError => exc
-                warn "Error chmodding profile dir: #{exc.class}: #{exc}"
-              end
               sleep 5
+              fix_permissions
             end
           end
         end
