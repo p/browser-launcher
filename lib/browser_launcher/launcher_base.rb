@@ -153,11 +153,11 @@ module BrowserLauncher
         # process exiting.
         Process.wait(pid)
         elapsed = Utils.monotime - started_at
-        # If the process ran for over 2 minutes, it was most likely
+        # If the process ran for over a minute minutes, it was most likely
         # killed by user rather than died on its own.
         # The diagnostics here is meant to apply to the proces not starting.
         # It's unnecessary when the process has been killed by user.
-        if elapsed <= 120 && $?.exitstatus != 0
+        if elapsed <= 60 && $?.exitstatus != 0
           raise "Failed to run #{joined}: process exited with code #{$?.exitstatus}"
         end
       else
