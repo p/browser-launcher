@@ -137,7 +137,7 @@ module BrowserLauncher
       make_group_accessible(profile_path, recurse: true)
 
       tmpdir_paths.each do |path|
-        make_group_accessible(path)
+        make_group_accessible(path, recurse: true)
       end
     end
 
