@@ -115,8 +115,18 @@ module BrowserLauncher
         end
       end
 
+      def profile_path
+        if path = options[:profile_path]
+          path
+        elsif name = options[:profile_name]
+          File.join(File.expand_path("~"), name)
+        else
+          File.expand_path("~")
+        end
+      end
+
       def profile_pathname
-        @profile_pathname ||= Pathname.new(options.fetch(:profile_path))
+        @profile_pathname ||= Pathname.new(profile_path)
       end
 
       def config_pathname
