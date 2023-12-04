@@ -60,8 +60,9 @@ module BrowserLauncher
               'Session Storage',
               'Sessions',
               'Preferences',
-              #'Secure Preferences',
+              'Secure Preferences',
               'Local Extension Settings',
+              #'Extension State',
             ].include?(top_comp)
             then
               zip.get_output_stream(archive_path) do |f|
