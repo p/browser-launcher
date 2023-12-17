@@ -132,7 +132,28 @@ module BrowserLauncher
 
         content['profile'] ||= {}
         # https://www.howtogeek.com/725208/how-to-turn-off-pop-up-notifications-in-google-chrome/
-        content['profile']['default_content_setting_values'] = {'notifications' => 2}
+        content['profile']['default_content_setting_values'] ||= {}
+        content['profile']['default_content_setting_values'].update(
+          'notifications' => 2,
+          'ar' => 2,
+          'background_sync' => 2,
+          'file_system_write_guard' => 2,
+          'geolocation' => 2,
+          # HID, different from USB somehow?
+          'hid_guard' => 2,
+          'idle_detection' => 2,
+          'media_stream_camera' => 2,
+          'media_stream_mic' => 2,
+          'midi_sysex' => 2,
+          'payment_handler' => 2,
+          'sensors' => 2,
+          # serial port access...
+          'serial_guard' => 2,
+          # usb device access...
+          'usb_guard' => 2,
+          'vr' => 2,
+          'window_placement' => 2,
+        )
 
         content['session'] ||= {}
         # Startup behavior:
