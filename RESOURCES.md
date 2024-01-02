@@ -90,6 +90,8 @@ Other resources:
 - [Disable blocking of pasting](https://superuser.com/questions/919625/how-to-paste-text-into-input-fields-that-block-it)
 - [Text (memo) field extension](https://chrome.google.com/webstore/detail/text-field/igigbeogifbmkfgbllimpgdaelhilgkj)
 
+[Tampermonkey](https://chromewebstore.google.com/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+
 #### Ungoogled Chromium Preferences
 
 `./chrome/browser/ungoogled_flag_entries.h`
