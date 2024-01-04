@@ -198,6 +198,8 @@ https://github.com/Aris-t2/CustomCSSforFx
 https://www.userchrome.org/what-is-userchrome-css.html
 https://www-archive.mozilla.org/unix/customizing.html
 
+https://support.mozilla.org/en-US/kb/add-search-bar-firefox-toolbar
+
 ### Session Restore
 
 Reference: https://support.mozilla.org/en-US/questions/1182594
