@@ -17,72 +17,72 @@ module BrowserLauncher
       joined = cmd.join(' ')
       puts "Executing #{joined}"
 
+      # TODO temporary
+      #stdin_contents = stdin
+
       stdin = nil
       if stdin_contents
         stdin_rd, stdin_wr = IO.pipe
-        stdin = stdin_rd
+        stdin_io = stdin_rd
         stdin_wr.close_on_exec = true
       end
 
+      if stdout == :return || stdout == :yield
+        stdout_rd, stdout_wr = IO.pipe
+        stdout_io = stdout_wr
+        stdout_rd.close_on_exec = true
+        stdout_buf = ''
+      end
+
       opts = {
-        in: stdin&.fileno,
-        out: stdout&.fileno,
+        in: stdin_io&.fileno,
+        out: stdout_io&.fileno,
       }.compact
 
       pid = Process.spawn(*cmd, **opts)
+      threads = []
 
       if stdin_contents
         stdin_rd.close
 
-        write_thread = Thread.new do
+        threads << Thread.new do
           stdin_wr << stdin_contents
           stdin_wr.close
         end
       end
 
-      write_thread&.kill
-      write_thread&.join
+      if stdout_io
+        stdout_wr.close
 
-      Process.wait(pid)
-      if $?.exitstatus != 0
-        raise SpawnedProcessErrorExit.new(joined, $?.exitstatus)
-      end
-    end
-
-    module_function def run_stdout(cmd)
-      joined = cmd.join(' ')
-      rd, wr = IO.pipe
-      puts "Executing #{joined}"
-
-      pid = fork do
-        rd.close
-        STDOUT.reopen(wr)
-        wr.close
-        exec(*cmd)
-      end
-
-      wr.close
-
-      output = ''
-
-      while chunk = rd.read(1000)
-        if block_given?
-          yield chunk
-        else
-          output << chunk
+        threads << Thread.new do
+          while chunk = stdout_rd.read(1024)
+            if stdout == :yield
+              yield chunk
+            else
+              stdout_buf << chunk
+            end
+          end
         end
       end
 
       Process.wait(pid)
+
+      threads.map(&:kill)
+      threads.map(&:join)
+
       if $?.exitstatus != 0
         raise SpawnedProcessErrorExit.new(joined, $?.exitstatus)
       end
 
-      if block_given?
-        nil
+      if stdout == :return
+        stdout_buf
       else
-        output
+        nil
       end
+    end
+
+    module_function def run_stdout(cmd)
+      return run(cmd, stdout: block_given? ? :yield : :return)
     end
 
     module_function def verify_path_exists(path, desc, force: false)
