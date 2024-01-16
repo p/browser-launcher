@@ -142,9 +142,10 @@ module BrowserLauncher
     def run_browser(cmd)
       joined = cmd.join(' ')
       puts "Executing #{joined}"
+      threads = []
       if pid = fork
         if options[:group_accessible]
-          Thread.new do
+          threads << Thread.new do
             loop do
               sleep 5
               fix_permissions
@@ -152,16 +153,18 @@ module BrowserLauncher
           end
         end
 
+=begin
         if options[:group_accessible]
           loop do
             begin
-              Process.kill(0, pid)
+              p Process.kill(0, pid)
             rescue SystemCallError
               break
             end
             sleep 0.5
           end
         end
+=end
 
         started_at = Utils.monotime
 
@@ -170,6 +173,8 @@ module BrowserLauncher
         # in case the kill failed due to an error, not due to the target
         # process exiting.
         Process.wait(pid)
+        threads.map(&:kill)
+        threads.map(&:join)
         elapsed = Utils.monotime - started_at
         # If the process ran for over a minute minutes, it was most likely
         # killed by user rather than died on its own.

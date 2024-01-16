@@ -17,32 +17,31 @@ module BrowserLauncher
       joined = cmd.join(' ')
       puts "Executing #{joined}"
 
+      stdin = nil
       if stdin_contents
         stdin_rd, stdin_wr = IO.pipe
+        stdin = stdin_rd
+        stdin_wr.close_on_exec = true
       end
 
-      pid = fork do
-        if stdin_contents
-          stdin_wr.close
-          STDIN.reopen(stdin_rd)
-          stdin_rd.close
-        end
+      opts = {
+        in: stdin&.fileno,
+        out: stdout&.fileno,
+      }.compact
 
-        if stdout
-          STDOUT.reopen(stdout)
-        end
-
-        exec(*cmd)
-      end
+      pid = Process.spawn(*cmd, **opts)
 
       if stdin_contents
         stdin_rd.close
 
-        Thread.new do
+        write_thread = Thread.new do
           stdin_wr << stdin_contents
           stdin_wr.close
         end
       end
+
+      write_thread&.kill
+      write_thread&.join
 
       Process.wait(pid)
       if $?.exitstatus != 0
