@@ -13,15 +13,35 @@ module BrowserLauncher
       attr_reader :exitstatus
     end
 
-    module_function def run(cmd, stdout: nil)
+    module_function def run(cmd, stdin_contents: nil, stdout: nil)
       joined = cmd.join(' ')
       puts "Executing #{joined}"
 
+      if stdin_contents
+        stdin_rd, stdin_wr = IO.pipe
+      end
+
       pid = fork do
+        if stdin_contents
+          stdin_wr.close
+          STDIN.reopen(stdin_rd)
+          stdin_rd.close
+        end
+
         if stdout
           STDOUT.reopen(stdout)
         end
+
         exec(*cmd)
+      end
+
+      if stdin_contents
+        stdin_rd.close
+
+        Thread.new do
+          stdin_wr << stdin_contents
+          stdin_wr.close
+        end
       end
 
       Process.wait(pid)
@@ -43,13 +63,26 @@ module BrowserLauncher
       end
 
       wr.close
+
+      output = ''
+
       while chunk = rd.read(1000)
-        yield chunk
+        if block_given?
+          yield chunk
+        else
+          output << chunk
+        end
       end
 
       Process.wait(pid)
       if $?.exitstatus != 0
         raise SpawnedProcessErrorExit.new(joined, $?.exitstatus)
+      end
+
+      if block_given?
+        nil
+      else
+        output
       end
     end
 
