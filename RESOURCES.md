@@ -5,6 +5,7 @@
 https://peter.sh/experiments/chromium-command-line-switches/
 https://superuser.com/questions/1343290/disable-chrome-session-restore-popup
 https://stackoverflow.com/questions/68855734/how-to-setup-chrome-sandbox-on-docker-container
+https://chromium.googlesource.com/chromium/src/+/main/docs/process_model_and_site_isolation.md
 
 ### Policies
 
@@ -233,6 +234,8 @@ Specific functionality:
 - https://github.com/onemen/TabMixPlus
 - [Disable JavaScript](https://addons.mozilla.org/en-US/firefox/addon/disable-javascript/) -
 works per-site. [Source/GH](https://github.com/dpacassi/disable-javascript)
+
+https://superuser.com/questions/1742855/how-do-i-disable-videos-in-firefox
 
 ## X11
 
