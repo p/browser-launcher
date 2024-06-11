@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'etc'
 require 'browser_launcher/utils'
 
 module BrowserLauncher
@@ -75,7 +74,7 @@ module BrowserLauncher
     end
 
     def maybe_relaunch_as_target_user
-      if Etc.getpwuid(Process.euid).name != target_user
+      if Utils.current_user != target_user
         begin
           Etc.getpwnam(target_user)
         rescue ArgumentError => e

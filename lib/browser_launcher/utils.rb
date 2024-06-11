@@ -1,3 +1,5 @@
+autoload :Etc, 'etc'
+
 module BrowserLauncher
   module Utils
 
@@ -154,6 +156,36 @@ module BrowserLauncher
 
     module_function def monotime
       Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    end
+
+    module_function def current_user
+      Etc.getpwuid(Process.euid).name
+    end
+
+    module_function def reexec_as_user(target_user, xauth: false)
+      if xauth
+        cmd = ['sudo', '-nu', target_user, 'id']
+        Utils.run(cmd)
+        auth = Utils.run_stdout(['xauth', 'extract', '-', ENV.fetch('DISPLAY')])
+        cmd = ['sudo', '-nu', target_user,
+          'env', "XAUTHORITY=/home/#{target_user}/.Xauthority",
+          'xauth', 'merge', '-']
+        Utils.run(cmd, stdin_contents: auth)
+        extra_args = [
+          'env', "XAUTHORITY=#{target_xauthority_path}",
+        ]
+      else
+        extra_args = []
+      end
+
+      puts "Relaunching as #{target_user}"
+      cmd = [
+        'sudo', '-nu', target_user,
+      ] + extra_args + [
+        File.realpath(File.expand_path($0))
+      ] + ARGV
+      puts "Executing #{cmd.join(' ')}"
+      exec(*cmd)
     end
 
   end

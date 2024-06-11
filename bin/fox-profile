@@ -21,9 +21,21 @@ OptionParser.new do |opts|
   opts.on("-p", "--profile-path=PATH", "Path to the profile") do |value|
     options[:profile_path] = value
   end
+
+  opts.on("-u", "--user=USER", "Operate on profiles of this user") do |v|
+    options[:user] = v
+  end
 end.parse!
 
 $: << File.join(File.dirname(__FILE__), '../lib')
+
+if target_user = options[:user]
+  require 'browser_launcher/utils'
+
+  if BrowserLauncher::Utils.current_user != target_user
+    BrowserLauncher::Utils.reexec_as_user(target_user)
+  end
+end
 
 require 'browser_launcher/fox/profile_manager'
 
