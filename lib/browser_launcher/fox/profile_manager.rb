@@ -20,7 +20,9 @@ module BrowserLauncher
       attr_reader :options
 
       def run
-        if out_path = options[:save_session]
+        if options[:list_profiles]
+
+        elsif out_path = options[:save_session]
           save_session(out_path)
         elsif out_path = options[:export_session]
           export_session(out_path)
