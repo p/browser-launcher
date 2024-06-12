@@ -10,6 +10,7 @@ require 'browser_launcher/launcher_base'
 module BrowserLauncher
   module Fox
     class Launcher < LauncherBase
+      include FsLocations
 
       private
 
@@ -179,27 +180,6 @@ module BrowserLauncher
           cmd << '-f'
         end
         cmd += ARGV
-      end
-
-      def rel_profiles_dir
-        @profiles_dir ||= case File.basename(binary_path)
-        when 'waterfox', 'waterfox-classic'
-          if binary_path =~ /waterfox-classic/
-            '.waterfox-classic'
-          else
-            '.waterfox'
-          end
-        when 'firefox'
-          '.mozilla/firefox'
-        when 'palemoon'
-          '.moonchild productions/pale moon'
-        else
-          raise "Unknown browser #{binary_path}"
-        end
-      end
-
-      def profiles_dir
-        @profiles_dir ||= File.join(File.expand_path('~'), rel_profiles_dir)
       end
 
       def profile_basename

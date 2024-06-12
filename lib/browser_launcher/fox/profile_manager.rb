@@ -5,11 +5,14 @@ autoload :YAML, 'yaml'
 autoload :Find, 'find'
 autoload :Zip, 'zip'
 require 'browser_launcher/utils'
+require 'browser_launcher/fox/fs_locations'
 autoload :LZ4, 'extlz4'
 
 module BrowserLauncher
   module Fox
     class ProfileManager
+      include FsLocations
+
       def initialize(**opts)
         @options = opts.dup.freeze
       end
