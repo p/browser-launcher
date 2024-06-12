@@ -188,5 +188,11 @@ module BrowserLauncher
       exec(*cmd)
     end
 
+    module_function def dir_entries(path)
+      Dir.entries(path).reject do |entry|
+        entry == '.' || entry == '..'
+      end.sort
+    end
+
   end
 end

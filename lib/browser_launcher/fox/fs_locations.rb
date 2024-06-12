@@ -24,6 +24,23 @@ module BrowserLauncher
       def profiles_dir
         @profiles_dir ||= File.join(File.expand_path('~'), rel_profiles_dir)
       end
+
+      def all_profiles_names
+        # Here we can either parse profiles.ini and get the known profiles
+        # reliably, or take all subdirectories.
+        # Unfortunately now mozilla appears to dump random junk into the
+        # top-level profiles directory ("Crash Reports", "Pending Pings")
+        # therefore simply iterating the directories is insufficient.
+        ini_path = File.join(profiles_dir, 'profiles.ini')
+
+        if File.exist?(ini_path)
+          # Now we *could* parse the file correctly, but for now take a shortcut
+          contents = File.read(ini_path)
+          contents.scan(/^Name=(.+)/)
+        else
+          []
+        end
+      end
     end
   end
 end

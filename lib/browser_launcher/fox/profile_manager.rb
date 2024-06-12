@@ -19,9 +19,15 @@ module BrowserLauncher
 
       attr_reader :options
 
+      def binary_path
+        options[:binary_path] || 'firefox'
+      end
+
       def run
         if options[:list_profiles]
-
+          all_profiles_names.each do |name|
+            puts name
+          end
         elsif out_path = options[:save_session]
           save_session(out_path)
         elsif out_path = options[:export_session]
