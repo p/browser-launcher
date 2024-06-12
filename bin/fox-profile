@@ -2,6 +2,7 @@
 
 require 'optparse'
 
+args = ARGV.dup
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: fox-profile option..."
@@ -25,7 +26,7 @@ OptionParser.new do |opts|
   opts.on("-u", "--user=USER", "Operate on profiles of this user") do |v|
     options[:user] = v
   end
-end.parse!
+end.parse!(args)
 
 $: << File.join(File.dirname(__FILE__), '../lib')
 
