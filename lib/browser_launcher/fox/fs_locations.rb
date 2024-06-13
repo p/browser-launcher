@@ -28,11 +28,15 @@ module BrowserLauncher
       end
 
       def all_profiles_names
-        ProfileCatalog.new(profiles_dir).profile_names
+        profile_catalog.profile_names
+      end
+
+      def profile_catalog
+        @profile_catalog ||= ProfileCatalog.new(profiles_dir)
       end
 
       def path_for_profile_name(profile_name)
-        ProfileCatalog.new(profiles_dir).profile_path(profile_name)
+        profile_catalog.profile_path(profile_name)
       end
     end
   end
