@@ -98,6 +98,8 @@ Other resources:
 
 [Tampermonkey](https://chromewebstore.google.com/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 
+[Memory model / site isolation / multi-processes](https://chromium.googlesource.com/chromium/src/+/main/docs/process_model_and_site_isolation.md)
+
 #### Ungoogled Chromium Preferences
 
 `./chrome/browser/ungoogled_flag_entries.h`
