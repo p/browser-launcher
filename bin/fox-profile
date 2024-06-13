@@ -28,6 +28,10 @@ OptionParser.new do |opts|
     options[:list_profiles] = true
   end
 
+  opts.on("--open-urls", "List URLs of open tabs") do
+    options[:list_open_urls] = true
+  end
+
   opts.on("-p", "--profile=PATH", "Name of the profile to operate on") do |value|
     options[:profile] = value
   end

@@ -25,9 +25,9 @@ module BrowserLauncher
 
       def run
         if options[:list_profiles]
-          all_profiles_names.each do |name|
-            puts name
-          end
+          list_profiles
+        elsif options[:list_open_urls]
+          list_open_urls
         elsif out_path = options[:save_session]
           save_session(out_path)
         elsif out_path = options[:export_session]
@@ -38,6 +38,42 @@ module BrowserLauncher
       end
 
       private
+
+      def list_profiles
+        all_profiles_names.each do |name|
+          puts name
+        end
+      end
+
+      def list_open_urls
+        unless profile_pathname.exist?
+          raise "Profile path does not exist: #{profile_path}"
+        end
+
+        session_store_path = profile_pathname.join('sessionstore-backups/recovery.jsonlz4')
+        if session_store_path.exist?
+          data = load_json_lz4(session_store_path)
+          data.fetch('windows').each_with_index do |window, index|
+            puts "Window #{index+1}"
+            window.fetch('tabs').each do |tab|
+              entry = tab.fetch('entries').last
+              puts "  #{entry.fetch('url')}"
+              puts "    #{entry.fetch('title')}"
+            end
+          end
+        else
+          puts 'No session store data'
+        end
+      end
+
+      def load_json_lz4(path)
+        File.open(path) do |f|
+          # TODO Verify size
+          f.read(12)
+          data = LZ4.block_decode(f.read)
+          JSON.load(data)
+        end
+      end
 
       def save_session(out_path)
         if File.exist?(out_path)
@@ -93,13 +129,9 @@ module BrowserLauncher
             this_out_path = out_path.join(rel_path.sub(/lz4$/, '').sub(/\.json\.moz$/, '.json'))
             FileUtils.mkdir_p(File.dirname(this_out_path))
             File.open(this_out_path, 'w') do |out_f|
-              File.open(this_pathname) do |f|
-                # TODO Verify size
-                f.read(12)
-                data = LZ4.block_decode(f.read)
-                data = JSON.pretty_generate(JSON.load(data))
-                out_f.write(data)
-              end
+              data = load_json_lz4(this_pathname)
+              data = JSON.pretty_generate(data)
+              out_f.write(data)
             end
           end
         end
