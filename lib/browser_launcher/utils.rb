@@ -15,7 +15,7 @@ module BrowserLauncher
       attr_reader :exitstatus
     end
 
-    module_function def run(cmd, stdin_contents: nil, stdout: nil)
+    module_function def run(cmd, stdin_contents: nil, stdout: nil, &block)
       joined = cmd.join(' ')
       puts "Executing #{joined}"
 
@@ -59,7 +59,7 @@ module BrowserLauncher
         threads << Thread.new do
           while chunk = stdout_rd.read(1024)
             if stdout == :yield
-              yield chunk
+              block.call(chunk)
             else
               stdout_buf << chunk
             end
@@ -83,8 +83,8 @@ module BrowserLauncher
       end
     end
 
-    module_function def run_stdout(cmd)
-      return run(cmd, stdout: block_given? ? :yield : :return)
+    module_function def run_stdout(cmd, &block)
+      return run(cmd, stdout: block_given? ? :yield : :return, &block)
     end
 
     module_function def verify_path_exists(path, desc, force: false)
