@@ -7,6 +7,15 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: fox-profile option..."
 
+  opts.on("-b", "--binary=PATH", "Launch the binary at PATH (default: firefox)") do |v|
+    if v.include?('/')
+      Utils.verify_path_exists(v, 'binary')
+    else
+      # TODO locate the binary in PATH, warn/error if missing
+    end
+    options[:binary_path] = v
+  end
+
   opts.on("--dump-cookies", "Dump cookies") do
     options[:dump_cookies] = true
   end

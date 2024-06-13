@@ -13,7 +13,7 @@ module BrowserLauncher
       
       def profile_names
         profile_keys.map do |key|
-          catalog[key][:Name]
+          catalog[key].fetch('Name')
         end
       end
       
@@ -27,6 +27,9 @@ module BrowserLauncher
       
       def profile_path(profile_name)
         section = catalog[profile_id(profile_name)]
+        if section.nil? 
+          raise "Profile does not exist: #{profile_name}"
+        end
         if section['IsRelative']
           File.join(profiles_dir, section.fetch('Path'))
         else
