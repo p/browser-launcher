@@ -78,6 +78,10 @@ module BrowserLauncher
       end
 
       def export_session(out_path)
+        unless profile_pathname.exist?
+          raise "Profile path does not exist: #{profile_path}"
+        end
+
         out_path = Pathname.new(out_path)
         %w(
           search.json.mozlz4
@@ -114,11 +118,13 @@ module BrowserLauncher
       end
 
       def profile_pathname
-        @profile_pathname ||= Pathname.new(options.fetch(:profile_path))
+        @profile_pathname ||= Pathname.new(profile_path)
       end
 
       def profile_path
-        profile_pathname.to_s
+        options[:profile_path] or begin
+          path_for_profile_name(options.fetch(:profile))
+        end
       end
 
       def cookies_pathname

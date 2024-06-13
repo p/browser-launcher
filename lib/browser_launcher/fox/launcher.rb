@@ -3,7 +3,7 @@
 require 'optparse'
 require 'fileutils'
 require 'json'
-require 'inifile'
+require 'browser_launcher/fox/profile_catalog'
 require 'browser_launcher/utils'
 require 'browser_launcher/launcher_base'
 
@@ -193,22 +193,8 @@ module BrowserLauncher
       def launch
         maybe_relaunch_as_target_user
 
-        catalog_path = File.join(profiles_dir, 'profiles.ini')
-
-        if File.exist?(catalog_path)
-          ini = IniFile.new(filename: catalog_path, separator: '')
-        else
-          ini = IniFile.new(separator: '')
-        end
-
-        ini['Profile0'] = {
-          Name: profile,
-          IsRelative: 1,
-          Path: profile_basename,
-        }
-
-        FileUtils.mkdir_p(profiles_dir)
-        ini.write(filename: catalog_path)
+        catalog = ProfileCatalog.new(profiles_dir)
+        catalog.add_profile!(profile, profile_basename)
 
         FileUtils.mkdir_p(profile_path)
 

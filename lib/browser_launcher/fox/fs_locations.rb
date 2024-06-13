@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'browser_launcher/fox/profile_catalog'
+
 module BrowserLauncher
   module Fox
     module FsLocations
@@ -26,20 +28,11 @@ module BrowserLauncher
       end
 
       def all_profiles_names
-        # Here we can either parse profiles.ini and get the known profiles
-        # reliably, or take all subdirectories.
-        # Unfortunately now mozilla appears to dump random junk into the
-        # top-level profiles directory ("Crash Reports", "Pending Pings")
-        # therefore simply iterating the directories is insufficient.
-        ini_path = File.join(profiles_dir, 'profiles.ini')
+        ProfileCatalog.new(profiles_dir).profile_names
+      end
 
-        if File.exist?(ini_path)
-          # Now we *could* parse the file correctly, but for now take a shortcut
-          contents = File.read(ini_path)
-          contents.scan(/^Name=(.+)/)
-        else
-          []
-        end
+      def path_for_profile_name(profile_name)
+        ProfileCatalog.new(profiles_dir).profile_path(profile_name)
       end
     end
   end

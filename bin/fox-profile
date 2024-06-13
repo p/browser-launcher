@@ -19,7 +19,11 @@ OptionParser.new do |opts|
     options[:list_profiles] = true
   end
 
-  opts.on("-p", "--profile-path=PATH", "Path to the profile") do |value|
+  opts.on("-p", "--profile=PATH", "Name of the profile to operate on") do |value|
+    options[:profile] = value
+  end
+
+  opts.on("-P", "--profile-path=PATH", "Path to the profile") do |value|
     options[:profile_path] = value
   end
 
