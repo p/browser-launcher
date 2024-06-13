@@ -96,7 +96,9 @@ module BrowserLauncher
               File.open(this_pathname) do |f|
                 # TODO Verify size
                 f.read(12)
-                out_f.write(LZ4.block_decode(f.read))
+                data = LZ4.block_decode(f.read)
+                data = JSON.pretty_generate(JSON.load(data))
+                out_f.write(data)
               end
             end
           end
