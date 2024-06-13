@@ -6,6 +6,7 @@ require 'json'
 require 'browser_launcher/fox/profile_catalog'
 require 'browser_launcher/utils'
 require 'browser_launcher/launcher_base'
+require 'browser_launcher/fox/fs_locations'
 
 module BrowserLauncher
   module Fox
@@ -131,7 +132,7 @@ module BrowserLauncher
         File.join(File.dirname(__FILE__), '../../../data/fox')
       end
 
-      def profile
+      def profile_name
         options[:profile_name] || 'default'
       end
 
@@ -183,7 +184,7 @@ module BrowserLauncher
       end
 
       def profile_basename
-        "gen.#{profile}"
+        "gen.#{profile_name}"
       end
 
       def profile_path
@@ -194,7 +195,7 @@ module BrowserLauncher
         maybe_relaunch_as_target_user
 
         catalog = ProfileCatalog.new(profiles_dir)
-        catalog.add_profile!(profile, profile_basename)
+        catalog.add_profile!(profile_name, profile_basename)
 
         FileUtils.mkdir_p(profile_path)
 
