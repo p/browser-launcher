@@ -6,6 +6,20 @@ module BrowserLauncher
   module Fox
     module FsLocations
 
+      BROWSER_BINARY_LIST = %w(
+        waterfox-classic
+        waterfox
+        firefox
+        palemoon
+      ).freeze
+
+      PROFILE_DIR_LIST = %w(
+        .waterfox-classic
+        .waterfox
+        .mozilla/firefox
+        .moonchild productions/pale moon
+      ).freeze
+
       def rel_profiles_dir
         @profiles_dir ||= case File.basename(binary_path)
         when 'waterfox', 'waterfox-classic'

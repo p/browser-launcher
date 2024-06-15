@@ -25,7 +25,11 @@ module BrowserLauncher
 
       def run
         if options[:list_profiles]
-          list_profiles
+          if options[:all_binaries]
+            list_profiles_all_binaries
+          else
+            list_profiles_ui
+          end
         elsif options[:list_open_urls]
           list_open_urls
         elsif out_path = options[:save_session]
@@ -42,6 +46,23 @@ module BrowserLauncher
       def list_profiles
         all_profiles_names.each do |name|
           puts name
+        end
+      end
+
+      def list_profiles_all_binaries
+        opts = options.dup
+        opts.delete(:all_binaries)
+        BROWSER_BINARY_LIST.each do |binary|
+          manager = self.class.new(**opts.merge(binary_path: binary))
+          names = manager.send(:all_profiles_names)
+          if names.any?
+            puts "Profiles for #{binary}:"
+            names.each do |name|
+              puts "  #{name}"
+            end
+          else
+            puts "No profiles for #{binary}"
+          end
         end
       end
 
