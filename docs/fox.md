@@ -124,3 +124,11 @@ Specific functionality:
 works per-site. [Source/GH](https://github.com/dpacassi/disable-javascript)
 
 https://superuser.com/questions/1742855/how-do-i-disable-videos-in-firefox
+
+### Multi-Process & Process Limits
+
+- https://www.reddit.com/r/firefox/comments/j3cn2q/moz_force_disable_e10s_not_working_in_firefox_81/
+- https://bugzilla.mozilla.org/show_bug.cgi?id=1653384
+- https://www.ghacks.net/2016/07/22/multi-process-firefox/
+- https://support.mozilla.org/en-US/questions/1264580
+- https://support.mozilla.org/en-US/questions/1264552
