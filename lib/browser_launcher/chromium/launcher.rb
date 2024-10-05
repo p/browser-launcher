@@ -60,6 +60,10 @@ module BrowserLauncher
             options[:new] = true
           end
 
+          opts.on("--min-process", "Minimize number of processes chromium will try to create") do
+            options[:min_process] = true
+          end
+
           opts.on('-o', '--overlay=PATH', 'Copy specified directory or extract specified zip file over base directory') do |v|
             options[:overlay_path] = v
           end
@@ -151,6 +155,9 @@ module BrowserLauncher
         if options[:new]
           cmd << '-n'
         end
+        if options[:min_process]
+          cmd << '--min-process'
+        end
         case options[:restore]
         when nil
         when false
@@ -213,6 +220,13 @@ module BrowserLauncher
         ]
         if options[:new] || options[:restore] == false
           cmd << '--disable-session-crashed-bubble'
+        end
+        if options[:min_process]
+          # https://stackoverflow.com/questions/51320322/how-to-disable-site-isolation-in-google-chrome
+          cmd << '--disable-features=IsolateOrigins,site-per-process'
+          cmd << '--disable-site-isolation-trials'
+          # https://superuser.com/questions/952302/how-to-make-google-chrome-or-chromium-use-less-memory
+          cmd << '--renderer-process-limit=2'
         end
         run_browser(cmd)
       end

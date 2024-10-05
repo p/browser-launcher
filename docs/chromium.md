@@ -100,6 +100,12 @@ Other resources:
 
 [Memory model / site isolation / multi-processes](https://chromium.googlesource.com/chromium/src/+/main/docs/process_model_and_site_isolation.md)
 
+Disable site isolation: https://stackoverflow.com/questions/51320322/how-to-disable-site-isolation-in-google-chrome
+
+Use less memory: https://superuser.com/questions/952302/how-to-make-google-chrome-or-chromium-use-less-memory
+
+Check: chrome://process-internals/#web-contents
+
 #### Ungoogled Chromium Preferences
 
 `./chrome/browser/ungoogled_flag_entries.h`
