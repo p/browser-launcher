@@ -316,6 +316,35 @@ module BrowserLauncher
           end
         end
 
+        handlers_path = File.join(profile_path, 'handlers.json')
+        handlers = if File.exist?(handlers_path)
+          File.open(handlers_path) do |f|
+            JSON.load(f)
+          end
+        else
+          {
+            defaultHandlersVersion: {'en-US' => 4},
+            mimeTypes: {},
+            schemes: {},
+          }
+        end
+
+        handlers['mimeTypes'] ||= {}
+        if xpdf_path = which('xpdf')
+          handlers['mimeTypes']['application/pdf'] = {
+            action: 2,
+            ask: true,
+            handlers: [
+              name: 'Xpdf', path: xpdf_path,
+            ],
+            extensions: 'pdf',
+          }
+        end
+
+        File.open(handlers_path, 'w') do |f|
+          f << JSON.dump(handlers)
+        end
+
         # Waterfox and waterfox classic put profiles in the same place, ugh.
         #exec(binary, '-P', profile)
         cmd = [binary_path, '--no-remote', '--profile', profile_path]

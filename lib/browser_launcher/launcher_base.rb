@@ -64,9 +64,16 @@ module BrowserLauncher
     end
 
     def have_bin?(name)
-      ENV.fetch('PATH').split(':').any? do |dir|
-        File.exist?(File.join(dir, name))
+      !!which(name)
+    end
+
+    def which(name)
+      ENV.fetch('PATH').split(':').each do |dir|
+        if File.exist?(path = File.join(dir, name))
+          return path
+        end
       end
+      nil
     end
 
     def target_xauthority_path
