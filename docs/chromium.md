@@ -122,3 +122,10 @@ Relevant ones:
 ### Keyboard Shortcuts
 
 - https://superuser.com/questions/962871/how-to-exit-the-chromium-search-bar-without-using-the-mouse
+
+### Memory Limit
+
+```
+[387020.638999] mmap: chrome (17497): VmData 8590200832 exceed data ulimit 8589934592. Update limits or use boot option ignore_rlimit_data.
+[387020.639031] traps: chrome[17497] trap int3 ip:561bd66ad086 sp:7ffe5f2a8e00 error:0 in chrome[29ba086,561bd6170000+cf07000]
+```
