@@ -50,6 +50,9 @@ module BrowserLauncher
               puts JSON.dump(rows)
             end
           when :sql
+            if options[:cookie_domain]
+              raise NotImplementedError
+            end
             BrowserLauncher::Utils.run(['sqlite3', cookies_path, '.dump'])
           else
             raise ArgumentError, "Invalid format: #{format}"
@@ -67,6 +70,12 @@ module BrowserLauncher
           rows.map! do |row|
             Hash[columns.zip(row)].tap do |hash|
               hash.delete('id')
+            end
+          end
+          if domain = options[:cookie_domain]
+            rows.delete_if do |row|
+              # TODO perform a proper match
+              row['baseDomain'] != domain
             end
           end
           yield rows

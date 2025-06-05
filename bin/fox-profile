@@ -60,6 +60,10 @@ OptionParser.new do |opts|
     end
     options[:format] = v.downcase.to_sym
   end
+
+  opts.on('--cookie-domain=DOMAIN', 'Dump cookies applicable to DOMAIN (YAML and JSON formats only)') do |v|
+    options[:cookie_domain] = v
+  end
 end.parse!(args)
 
 $: << File.join(File.dirname(__FILE__), '../lib')
