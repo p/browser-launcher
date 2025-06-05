@@ -53,6 +53,13 @@ OptionParser.new do |opts|
   opts.on("-u", "--user=USER", "Operate on profiles of this user") do |v|
     options[:user] = v
   end
+
+  opts.on('-f', '--format=FORMAT', 'Dump in specified format: yaml, json, sql') do |v|
+    unless %w(yaml json sql).include?(v.downcase)
+      raise "Unknown format: #{v}"
+    end
+    options[:format] = v.downcase.to_sym
+  end
 end.parse!(args)
 
 $: << File.join(File.dirname(__FILE__), '../lib')

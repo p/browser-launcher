@@ -37,11 +37,41 @@ module BrowserLauncher
         elsif out_path = options[:export_session]
           export_session(out_path)
         elsif options[:dump_cookies]
-          BrowserLauncher::Utils.run(['sqlite3', cookies_path, '.dump'])
+          format = options[:format] || :sql
+          case format
+          when :yaml
+            require 'yaml'
+            dump_cookies do |rows|
+              puts YAML.dump(rows)
+            end
+          when :json
+            require 'json'
+            dump_cookies do |rows|
+              puts JSON.dump(rows)
+            end
+          when :sql
+            BrowserLauncher::Utils.run(['sqlite3', cookies_path, '.dump'])
+          else
+            raise ArgumentError, "Invalid format: #{format}"
+          end
         end
       end
 
       private
+
+      def dump_cookies
+        require 'sqlite3'
+        SQLite3::Database.open(cookies_path) do |db|
+          rows = db.execute2('select * from moz_cookies order by baseDomain, name')
+          columns = rows.shift
+          rows.map! do |row|
+            Hash[columns.zip(row)].tap do |hash|
+              hash.delete('id')
+            end
+          end
+          yield rows
+        end
+      end
 
       def list_profiles
         all_profiles_names.each do |name|
