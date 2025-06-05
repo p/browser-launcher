@@ -54,14 +54,14 @@ OptionParser.new do |opts|
     options[:user] = v
   end
 
-  opts.on('-f', '--format=FORMAT', 'Dump in specified format: yaml, json, sql') do |v|
-    unless %w(yaml json sql).include?(v.downcase)
+  opts.on('-f', '--format=FORMAT', 'Dump in specified format: yaml, json, sql, kv') do |v|
+    unless %w(yaml json sql kv).include?(v.downcase)
       raise "Unknown format: #{v}"
     end
     options[:format] = v.downcase.to_sym
   end
 
-  opts.on('--cookie-domain=DOMAIN', 'Dump cookies applicable to DOMAIN (YAML and JSON formats only)') do |v|
+  opts.on('--cookie-domain=DOMAIN', 'Dump cookies applicable to DOMAIN (YAML, JSON and KV formats only)') do |v|
     options[:cookie_domain] = v
   end
 end.parse!(args)

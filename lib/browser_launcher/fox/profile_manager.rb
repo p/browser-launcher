@@ -49,6 +49,12 @@ module BrowserLauncher
             dump_cookies do |rows|
               puts JSON.dump(rows)
             end
+          when :kv
+            dump_cookies do |rows|
+              rows.each do |row|
+                puts "#{row['name']}=#{row['value']}"
+              end
+            end
           when :sql
             if options[:cookie_domain]
               raise NotImplementedError
