@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+autoload :ERB, 'erb'
 require 'optparse'
 require 'fileutils'
 require 'json'
@@ -64,8 +65,8 @@ module BrowserLauncher
             options[:user] = v
           end
 
-          opts.on("--user-js=PATH", "Path to user.js") do |v|
-            options[:user_js_path] = Utils.verify_path_exists(v, 'user.js')
+          opts.on("--user-js=PATH", "Path to user.js or user.js.erb") do |v|
+            options[:user_js_path] = Utils.verify_path_exists(v, 'user.js / user.js.erb')
           end
 
           opts.on("--user-chrome-css=PATH", "Path to userChrome.css") do |v|
@@ -202,7 +203,13 @@ module BrowserLauncher
         chrome_path = File.join(profile_path, 'chrome')
         FileUtils.mkdir_p(chrome_path)
         if path = options[:user_js_path]
-          FileUtils.cp(path, File.join(chrome_path, 'user.js'))
+          contents = File.read(path)
+          if path.end_with?('.erb')
+            contents = ERB.new(contents).result
+          end
+          File.open(File.join(chrome_path, 'user.js'), 'w') do |f|
+            f << contents
+          end
         end
         if path = options[:user_chrome_css_path]
           FileUtils.rm_f(File.join(chrome_path, 'userChrome.css'))
