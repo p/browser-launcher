@@ -4,6 +4,10 @@
 
 https://www.waterfox.net/support/WINNT/profiles-where-waterfox-stores-user-data/
 
+### Settings
+
+Lots more stuff to block: https://github.com/pyllyukko/user.js/
+
 ### Extension Installation
 
 Option 1: place the unpacked extension into `distribution/extensions/ID`
