@@ -1,4 +1,5 @@
 autoload :Etc, 'etc'
+autoload :Timeout, 'timeout'
 
 module BrowserLauncher
   module Utils
@@ -15,7 +16,7 @@ module BrowserLauncher
       attr_reader :exitstatus
     end
 
-    module_function def run(cmd, stdin_contents: nil, stdout: nil, &block)
+    module_function def run(cmd, stdin_contents: nil, stdout: nil, timeout: nil, &block)
       joined = cmd.join(' ')
       puts "Executing #{joined}"
 
@@ -67,7 +68,22 @@ module BrowserLauncher
         end
       end
 
-      Process.wait(pid)
+      if timeout
+        begin
+          Timeout.timeout(timeout, Timeout::Error, "Timed out (#{timeout} seconds) waiting for #{cmd}") do
+            Process.wait(pid)
+          end
+        rescue Timeout::Error
+          Process.kill('TERM', pid) rescue nil
+          Thread.new do
+            sleep 1
+            Process.kill('KILL', pid) rescue nil
+          end
+          raise
+        end
+      else
+        Process.wait(pid)
+      end
 
       threads.map(&:kill)
       threads.map(&:join)
@@ -83,8 +99,9 @@ module BrowserLauncher
       end
     end
 
-    module_function def run_stdout(cmd, &block)
-      return run(cmd, stdout: block_given? ? :yield : :return, &block)
+    module_function def run_stdout(cmd, timeout: nil, &block)
+      return run(cmd, timeout: timeout,
+        stdout: block_given? ? :yield : :return, &block)
     end
 
     module_function def verify_path_exists(path, desc, force: false)
@@ -166,11 +183,13 @@ module BrowserLauncher
       if xauth
         cmd = ['sudo', '-nu', target_user, 'id']
         Utils.run(cmd)
-        auth = Utils.run_stdout(['xauth', 'extract', '-', ENV.fetch('DISPLAY')])
+        auth = Utils.run_stdout(
+          ['xauth', 'extract', '-', ENV.fetch('DISPLAY')],
+          timeout: 3)
         cmd = ['sudo', '-nu', target_user,
           'env', "XAUTHORITY=/home/#{target_user}/.Xauthority",
           'xauth', 'merge', '-']
-        Utils.run(cmd, stdin_contents: auth)
+        Utils.run(cmd, stdin_contents: auth, timeout: 3)
         extra_args = [
           'env', "XAUTHORITY=#{target_xauthority_path}",
         ]

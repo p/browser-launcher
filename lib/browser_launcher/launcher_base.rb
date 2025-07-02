@@ -99,11 +99,13 @@ module BrowserLauncher
           puts "Relaunching as #{target_user}"
           cmd = ['sudo', '-nu', target_user, 'id']
           Utils.run(cmd)
-          auth = Utils.run_stdout(['xauth', 'extract', '-', ENV.fetch('DISPLAY')])
+          auth = Utils.run_stdout(
+            ['xauth', 'extract', '-', ENV.fetch('DISPLAY')],
+            timeout: 3)
           cmd = ['sudo', '-nu', target_user,
             'env', "XAUTHORITY=/home/#{target_user}/.Xauthority",
             'xauth', 'merge', '-']
-          Utils.run(cmd, stdin_contents: auth)
+          Utils.run(cmd, stdin_contents: auth, timeout: 3)
           cmd = [
             'sudo', '-nu', target_user,
             'env', "XAUTHORITY=#{target_xauthority_path}",
