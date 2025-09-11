@@ -4,7 +4,7 @@ require 'optparse'
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: install [-n] [path]"
+  opts.banner = "Usage: configure-chromium [-n] [path]"
 
   opts.on("-c", "--ca=PATH", "Add a CA certificate to trust store") do |value|
     options[:ca_certs] ||= []
@@ -22,4 +22,8 @@ require 'browser_launcher/chromium/configurator'
 
 path = ARGV.shift || File.expand_path('~')
 
-BrowserLauncher::Chromium::Configurator.new(path, new: options[:new], ca_certs: options[:ca_certs]).configure
+BrowserLauncher::Chromium::Configurator.new(
+  path,
+  new: options[:new],
+  ca_certs: options[:ca_certs],
+).configure
