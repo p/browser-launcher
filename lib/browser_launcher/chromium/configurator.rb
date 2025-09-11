@@ -19,6 +19,12 @@ module BrowserLauncher
       end
 
       def configure
+        if options[:existing_profile]
+          unless profile_pathname.exist?
+            raise "Profile directory does not exist: #{profile_pathname}"
+          end
+        end
+
         if options[:overlay_path]
           do_overlay
         end

@@ -11,6 +11,10 @@ OptionParser.new do |opts|
     options[:ca_certs] << value
   end
 
+  opts.on('--existing', 'Require an existing profile') do
+    options[:existing_profile] = true
+  end
+
   opts.on("-n", "--new", "Assume a fresh launch") do
     options[:new] = true
   end
@@ -26,4 +30,5 @@ BrowserLauncher::Chromium::Configurator.new(
   path,
   new: options[:new],
   ca_certs: options[:ca_certs],
+  existing_profile: options[:existing_profile],
 ).configure
