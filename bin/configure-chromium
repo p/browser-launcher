@@ -16,7 +16,7 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-$: << File.join(File.dirname(__FILE__), '../lib/ruby')
+$: << File.join(File.dirname(__FILE__), '../lib')
 
 require 'browser_launcher/chromium/configurator'
 
