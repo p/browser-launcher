@@ -85,7 +85,7 @@ module BrowserLauncher
         Process.wait(pid)
       end
 
-      threads.map(&:kill)
+      #threads.map(&:kill)
       threads.map(&:join)
 
       if $?.exitstatus != 0

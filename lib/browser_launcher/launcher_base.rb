@@ -102,6 +102,9 @@ module BrowserLauncher
           auth = Utils.run_stdout(
             ['xauth', 'extract', '-', ENV.fetch('DISPLAY')],
             timeout: 3)
+          if auth.empty?
+            raise "No auth data obtained from xauth"
+          end
           cmd = ['sudo', '-nu', target_user,
             'env', "XAUTHORITY=/home/#{target_user}/.Xauthority",
             'xauth', 'merge', '-']
