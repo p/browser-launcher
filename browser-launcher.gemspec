@@ -1,7 +1,7 @@
 # coding: utf-8
 
 Gem::Specification.new do |spec|
-  spec.name          = "seriamp"
+  spec.name          = "browser-launcher"
   spec.version       = '0.1.0'
   spec.authors       = ['Oleg Pudeyev']
   spec.email         = ['code@olegp.name']
