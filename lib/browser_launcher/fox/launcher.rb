@@ -65,6 +65,10 @@ module BrowserLauncher
             options[:user] = v
           end
 
+          opts.on('-X', '--exec-from-path', 'Execute self from PATH as target user (use with -u)') do
+            options[:execute_from_path] = true
+          end
+
           opts.on("--user-js=PATH", "Path to user.js or user.js.erb") do |v|
             options[:user_js_path] = Utils.verify_path_exists(v, 'user.js / user.js.erb')
           end

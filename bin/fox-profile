@@ -54,6 +54,10 @@ OptionParser.new do |opts|
     options[:user] = v
   end
 
+  opts.on('-X', '--exec-from-path', 'Execute self from PATH as target user (use with -u)') do
+    options[:execute_from_path] = true
+  end
+
   opts.on('-f', '--format=FORMAT', 'Dump in specified format: yaml, json, sql, kv') do |v|
     unless %w(yaml json sql kv).include?(v.downcase)
       raise "Unknown format: #{v}"
@@ -72,7 +76,7 @@ if target_user = options[:user]
   require 'browser_launcher/utils'
 
   if BrowserLauncher::Utils.current_user != target_user
-    BrowserLauncher::Utils.reexec_as_user(target_user)
+    BrowserLauncher::Utils.reexec_as_user(target_user, binary_from_path: options[:execute_from_path])
   end
 end
 

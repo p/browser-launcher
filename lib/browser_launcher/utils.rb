@@ -179,14 +179,22 @@ module BrowserLauncher
       Etc.getpwuid(Process.euid).name
     end
 
-    module_function def reexec_as_user(target_user, xauth: false)
+    module_function def self_to_reexec(binary_from_path:)
+      if binary_from_path
+        File.basename($0)
+      else
+        File.realpath(File.expand_path($0))
+      end
+    end
+
+    module_function def reexec_as_user(target_user, xauth: false, binary_from_path: false)
       if xauth
-        cmd = ['sudo', '-nu', target_user, 'id']
+        cmd = ['sudo', '-nHiu', target_user, 'id']
         Utils.run(cmd)
         auth = Utils.run_stdout(
           ['xauth', 'extract', '-', ENV.fetch('DISPLAY')],
           timeout: 3)
-        cmd = ['sudo', '-nu', target_user,
+        cmd = ['sudo', '-nHiu', target_user,
           'env', "XAUTHORITY=/home/#{target_user}/.Xauthority",
           'xauth', 'merge', '-']
         Utils.run(cmd, stdin_contents: auth, timeout: 3)
@@ -198,11 +206,10 @@ module BrowserLauncher
       end
 
       puts "Relaunching as #{target_user}"
+      binary = self_to_reexec(binary_from_path: binary_from_path)
       cmd = [
-        'sudo', '-nu', target_user,
-      ] + extra_args + [
-        File.realpath(File.expand_path($0))
-      ] + ARGV
+        'sudo', '-nHiu', target_user,
+      ] + extra_args + [binary] + ARGV
       puts "Executing #{cmd.join(' ')}"
       exec(*cmd)
     end

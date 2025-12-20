@@ -97,7 +97,7 @@ module BrowserLauncher
           end
         else
           puts "Relaunching as #{target_user}"
-          cmd = ['sudo', '-nu', target_user, 'id']
+          cmd = ['sudo', '-nHiu', target_user, 'id']
           Utils.run(cmd)
           auth = Utils.run_stdout(
             ['xauth', 'extract', '-', ENV.fetch('DISPLAY')],
@@ -105,14 +105,15 @@ module BrowserLauncher
           if auth.empty?
             raise "No auth data obtained from xauth"
           end
-          cmd = ['sudo', '-nu', target_user,
+          binary = Utils.self_to_reexec(binary_from_path: options[:execute_from_path])
+          cmd = ['sudo', '-nHiu', target_user,
             'env', "XAUTHORITY=/home/#{target_user}/.Xauthority",
             'xauth', 'merge', '-']
           Utils.run(cmd, stdin_contents: auth, timeout: 3)
           cmd = [
-            'sudo', '-nu', target_user,
+            'sudo', '-nHiu', target_user,
             'env', "XAUTHORITY=#{target_xauthority_path}",
-            File.realpath(File.expand_path($0))
+            binary,
           ] + build_cmd
           puts "Executing #{cmd.join(' ')}"
           exec(*cmd)
