@@ -159,3 +159,7 @@ https://addons.mozilla.org/firefox/addon/switch-to-tab-blacklist/
 https://firefox-source-docs.mozilla.org/setup/linux_build.html
 
 Waterfox Classic Requires python < 3.12 to build.
+
+## Facebook Tracking
+
+https://support.mozilla.org/en-US/kb/facebook-container-prevent-facebook-tracking
