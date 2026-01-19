@@ -136,3 +136,26 @@ https://superuser.com/questions/1742855/how-do-i-disable-videos-in-firefox
 - https://www.ghacks.net/2016/07/22/multi-process-firefox/
 - https://support.mozilla.org/en-US/questions/1264580
 - https://support.mozilla.org/en-US/questions/1264552
+
+## Annoyances
+
+### Switch to tab
+
+https://support.mozilla.org/en-US/questions/839240
+
+Requires an extension:
+
+https://addons.mozilla.org/firefox/addon/switch-to-tab-no-more/
+
+https://addons.mozilla.org/firefox/addon/switch-to-tab-blacklist/
+
+
+    Alt + Enter opens the highlighted URL in a new tab.
+    Shift + Enter opens the highlighted URL in the current tab.
+    Cursor Right copies the highlighted URL to the location bar in case you want to edit it. 
+
+## Building
+
+https://firefox-source-docs.mozilla.org/setup/linux_build.html
+
+Waterfox Classic Requires python < 3.12 to build.
