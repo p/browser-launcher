@@ -44,45 +44,102 @@ module BrowserLauncher
         experiments = content['browser']['enabled_labs_experiments'] || []
         # in-product-help-demo-mode-choice@19: the "19" option is "disabled",
         # if these geniuses add more modes the number will likely go up?
+        #
+        # Indeed, now more options have been added, and the "disabled" one
+        # is the last one. Probably most sensible is  to set the value to 99
+        # (though if the value is validated for being in range, maybe 99
+        # would cause the flag to not be set at all).
         %w(
           allow-insecure-localhost
-          allow-popups-during-page-unload@2
-          allow-previews@2
-          animated-avatar-button@2
-          enable-heavy-ad-intervention@1
-          enable-lazy-image-loading@3
-          enable-native-notifications@2
-          enable-paint-holding@1
-          enable-resampling-input-events@7
-          enable-resampling-scroll-events@7
+          auto-picture-in-picture-for-video-playback@2
+          auto-picture-in-picture-video-heuristics@2
+          autofill-enable-cvc-storage-and-filling@2
+          autofill-enable-prefetching-risk-data-for-retrieval@2
+          autofill-remove-payments-butter-dropdown@1
+          back-forward-cache@2
+          bind-cookies-to-port@1
+          bookmark-bar-ntp@1
+          camera-mic-effects@2
+          compose-polite-nudge@2
+          compose-segmentation-promotion@2
+          compose-selection-nudge@9
+          compose-upfront-input-modes@2
+          cws-info-fast-check@2
+          deprecate-unload@1
+          device-posture@2
+          disable-beforeunload
+          disable-link-drag@1
+          disable-search-engine-collection
+          disable-sharing-hub
+          disable-top-sites
+          disable-webgl
+          document-picture-in-picture-animate-resize@2
+          enable-autofill-credit-card-upload@2
+          enable-experimental-webassembly-jspi@2
+          enable-generic-oidc-auth-profile-management@2
+          enable-generic-sensor-extra-classes@2
+          enable-lens-overlay@5
+          enable-lens-standalone@2
+          enable-low-end-device-mode
+          enable-network-and-issuer-icons-for-secure-payment-confirmation@4
+          enable-resampling-scroll-events-experimental-prediction@4
           enable-show-autofill-signatures
-          enable-text-fragment-anchor@1
-          extensions-toolbar-menu@1
+          enable-system-entropy@2
+          enable-system-notifications@2
+          enable-user-link-capturing-scope-extensions-pwa@2
+          enable-user-navigation-capturing-pwa@7
+          enable-web-bluetooth@2
+          enable-web-payments-experimental-features@2
+          enable-webassembly-baseline@2
+          enable-webassembly-memory64@2
+          enable-webrtc-hide-local-ips-with-mdns@1
+          enable-webusb-device-detection@2
+          explicit-browser-signin-ui-on-desktop@2
+          extension-telemetry-for-enterprise@5
+          file-system-observer@2
           fingerprinting-canvas-image-data-noise
           fingerprinting-canvas-measuretext-noise
           fingerprinting-client-rects-noise
           fractional-scroll-offsets@2
-          heavy-ad-privacy-mitigations-opt-out@1
-          native-file-system-api@2
-          ntp-realbox@2
-          omnibox-autocomplete-titles@2
-          omnibox-drive-suggestions@6
-          omnibox-loose-max-limit-on-dedicated-rows@1
-          omnibox-max-url-matches@6
-          omnibox-pedal-suggestions@2
-          omnibox-preserve-default-match-against-async-update@1
-          omnibox-rich-entity-suggestions@2
-          omnibox-tab-switch-suggestions@2
-          omnibox-ui-max-autocomplete-matches@10
-          omnibox-zero-suggestions-on-ntp-realbox@2
-          omnibox-zero-suggestions-on-ntp@2
-          omnibox-zero-suggestions-on-serp@2
-          password-leak-detection@2
-          prefetch-privacy-changes@1
-          smooth-scrolling@2
-          tab-hover-cards@4
-          username-first-flow@1
+          freezing-on-energy-saver@1
+          heavy-ad-privacy-mitigations@1
+          hide-crashed-bubble
           in-product-help-demo-mode-choice@19
+          keyboard-focusable-scrollers@1
+          minimal-referrers@1
+          no-default-browser-check
+          no-pings
+          oidc-auth-profile-management@2
+          omnibox-domain-suggestions@1
+          omnibox-max-url-matches@6
+          omnibox-search-client-prefetch@2
+          omnibox-search-prefetch@4
+          omnibox-starter-pack-iph@2
+          omnibox-ui-max-autocomplete-matches@10
+          page-content-annotations@4
+          permissions-ai-v1@2
+          product-specifications@2
+          prompt-api-for-gemini-nano-multimodal-input@2
+          prompt-api-for-gemini-nano@2
+          reduced-system-info@1
+          remove-client-hints@1
+          remove-cross-origin-referrers@1
+          rewriter-api-for-gemini-nano@2
+          set-ipv6-probe-false@2
+          shopping-list@2
+          shopping-page-types@2
+          smooth-scrolling@2
+          spoof-webgl-info@1
+          summarization-api-for-gemini-nano@2
+          tab-hover-cards@1
+          test-third-party-cookie-phaseout
+          text-based-audio-descriptions@2
+          text-safety-classifier@3
+          third-party-profile-management@2
+          viewport-segments@2
+          web-machine-learning-neural-network@2
+          webxr-incubations@2
+          writer-api-for-gemini-nano@2
         ).each do |exp|
           unless experiments.include?(exp)
             experiments << exp
