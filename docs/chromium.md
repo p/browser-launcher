@@ -139,3 +139,9 @@ Relevant ones:
 Might be relevant:
 
 - https://github.com/MicrosoftDocs/edge-developer
+
+### DNS over HTTP
+
+https://blog.chromium.org/2020/05/a-safer-and-more-private-browsing-DoH.html
+
+> If you are an IT administrator, Chrome will disable Secure DNS if it detects a managed environment via the presence of one or more enterprise policies. We’ve also added new DNS-over-HTTPS enterprise policies to allow for a managed configuration of Secure DNS and encourage IT administrators to look into deploying DNS-over-HTTPS for their users.

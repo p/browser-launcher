@@ -163,3 +163,11 @@ Waterfox Classic Requires python < 3.12 to build.
 ## Facebook Tracking
 
 https://support.mozilla.org/en-US/kb/facebook-container-prevent-facebook-tracking
+
+## CSS "prefers reduced motion" setting
+
+https://stackoverflow.com/questions/59708960/how-do-i-change-the-prefers-reduced-motion-setting-in-browsers#59709067
+
+https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion#User_Preferences
+
+In Firefox about:config: Add a number preference called ui.prefersReducedMotion and set its value to either 0 for full animation or to 1 to indicate a preference for reduced motion. Changes to this preference take effect immediately.
