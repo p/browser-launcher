@@ -76,8 +76,12 @@ module BrowserLauncher
             options[:restore] = true
           end
 
-          opts.on('-R', '--no-restore', 'Do not restore session and disable associated UI') do
+          opts.on('--no-restore', 'Do not restore session and disable associated UI') do
             options[:restore] = false
+          end
+
+          opts.on('-R', '--reset', 'Reset all existing profile data') do
+            options[:reset] = true
           end
 
           opts.on("-u", "--user=USER", "Launch as given user") do |v|
@@ -158,6 +162,9 @@ module BrowserLauncher
         if options[:min_process]
           cmd << '--min-process'
         end
+        if options[:reset]
+          cmd << '--reset'
+        end
         case options[:restore]
         when nil
         when false
@@ -177,6 +184,11 @@ module BrowserLauncher
         else
           profile_base = "/home/#{target_user}/#{profile}"
           profile_args = ["HOME=#{profile_base}", "XDG_HOME=#{profile_base}"]
+        end
+        pp options
+
+        if options[:reset]
+          FileUtils.rm_rf(profile_base)
         end
 
         # Chromium disrespects umask for downloads directory, try to fix.
