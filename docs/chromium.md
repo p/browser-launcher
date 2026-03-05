@@ -133,3 +133,9 @@ Relevant ones:
 ## Database Access
 
 - https://github.com/vjoel/ruby-leveldb-native
+- https://github.com/cclgroupltd/ccl_chromium_reader
+- https://github.com/dg-data/ccl_chrome_indexeddb
+
+Might be relevant:
+
+- https://github.com/MicrosoftDocs/edge-developer
