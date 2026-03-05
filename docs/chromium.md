@@ -145,3 +145,13 @@ Might be relevant:
 https://blog.chromium.org/2020/05/a-safer-and-more-private-browsing-DoH.html
 
 > If you are an IT administrator, Chrome will disable Secure DNS if it detects a managed environment via the presence of one or more enterprise policies. We’ve also added new DNS-over-HTTPS enterprise policies to allow for a managed configuration of Secure DNS and encourage IT administrators to look into deploying DNS-over-HTTPS for their users.
+
+## Disable video
+
+https://superuser.com/questions/670214/how-can-i-disable-html5-content-in-popular-browsers-like-firefox-and-chrome
+
+For Chrome/Chromium, there is HTTP Switchboard (available in Chrome store or github). There is a column in the matrix which can be selectively be turned on or off, which turn on/off HTML5 video/audio/SVG/fonts -- for whatever hostnames you wish.
+
+https://github.com/gorhill/httpswitchboard
+
+https://superuser.com/questions/1038968/how-to-block-disable-all-videos-from-automatically-loading-in-chrome?rq=1

@@ -171,3 +171,9 @@ https://stackoverflow.com/questions/59708960/how-do-i-change-the-prefers-reduced
 https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion#User_Preferences
 
 In Firefox about:config: Add a number preference called ui.prefersReducedMotion and set its value to either 0 for full animation or to 1 to indicate a preference for reduced motion. Changes to this preference take effect immediately.
+
+## Disable Video
+
+https://stackoverflow.com/questions/75875723/how-can-i-disable-video-content-in-firefox
+
+https://superuser.com/questions/1742855/how-do-i-disable-videos-in-firefox
